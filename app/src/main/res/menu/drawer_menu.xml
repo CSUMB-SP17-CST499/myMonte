@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/go"
-        android:icon="@android:drawable/ic_menu_call"
+        android:icon="@mipmap/ic_phone_in_talk_black_24dp"
         android:title="Campus PD" />
 
     <item
