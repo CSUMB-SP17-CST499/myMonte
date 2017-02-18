@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.close) {
             finish();
         }
-
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
