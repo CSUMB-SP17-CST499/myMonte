@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private ViewPager viewPager;
-    private DrawerLayout drawer;
+    private DrawerLayout drawerLayout;
     private TabLayout tabLayout;
     private String[] pageTitle = {"myPlanner", "News", "Parking"};
 
@@ -27,18 +27,21 @@ public class MainActivity extends AppCompatActivity
 
         viewPager = (ViewPager)findViewById(R.id.view_pager);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        drawer = (DrawerLayout) findViewById(R.id.drawerLayout);
+
+        //Initializing the drawerlayout
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
         setSupportActionBar(toolbar);
 
         //create default navigation drawer toggle
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
+        drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
         //setting Tab layout (number of Tabs = number of ViewPager pages)
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+
         for (int i = 0; i < 3; i++) {
             tabLayout.addTab(tabLayout.newTab().setText(pageTitle[i]));
         }
@@ -56,27 +59,15 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(pagerAdapter);
 
         //change Tab selection when swipe ViewPager
+        //adding functionality to tab and viewpager to manage each other when a page is changed or when a tab is selected
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
-        //change ViewPager page when tab selected
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                viewPager.setCurrentItem(tab.getPosition());
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
     }
 
+    /*
+    Method for the navigation Drawer that takes in the id from the navigation drawer
+    and based on the view, an action will be performed.
+     */
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -87,23 +78,23 @@ public class MainActivity extends AppCompatActivity
             viewPager.setCurrentItem(1);
         } else if (id == R.id.MapYourRoute) {
             viewPager.setCurrentItem(2);
-        } else if (id == R.id.go) {
-            Intent intent = new Intent(this, DesActivity.class);
-            intent.putExtra("string", "Go to other Activity by NavigationView item cliked!");
-            startActivity(intent);
+        } else if (id == R.id.CampusPD) {
+            //Intent intent = new Intent(this, DesActivity.class);
+            //intent.putExtra("string", "Go to other Activity by NavigationView item clicked!");
+            //startActivity(intent);
         } else if (id == R.id.close) {
             finish();
         }
 
-        drawer.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        assert drawer != null;
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
+        assert drawerLayout != null;
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
