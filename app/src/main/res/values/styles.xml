@@ -8,4 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="csumb_theme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/cardview_light_background</item>
+        <item name="colorPrimaryDark">@color/csumb_blue</item>
+    </style>
+
 </resources>
