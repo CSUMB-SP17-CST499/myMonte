@@ -30,14 +30,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         mView = inflater.inflate(R.layout.fragment_maps,container,false);
         return mView;
-        //return inflater.inflate(R.layout.fragment_maps, container, false);
     }
 
     @Override
@@ -56,8 +54,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback{
         MapsInitializer.initialize(getContext());
         mGoogleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(36.6538, 121.8017)).title("Statue of Liberty").snippet("I hope to go there"));
-        CameraPosition Liberty = CameraPosition.builder().target(new LatLng(36.6538, 121.8017)).zoom(16).bearing(0).tilt(45).build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(Liberty));
+        googleMap.addMarker(new MarkerOptions().position(new LatLng(36.652527, -121.797277)).title("CSUMB"));
+        CameraPosition CSUMB = CameraPosition.builder().target(new LatLng(36.6538, -121.797277)).zoom(16).bearing(0).tilt(45).build();
+        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(CSUMB));
     }
 }

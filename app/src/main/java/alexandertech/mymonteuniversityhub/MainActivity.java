@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity
 
         //change Tab selection when swipe ViewPager
         //adding functionality to tab and viewpager to manage each other when a page is changed or when a tab is selected
-        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         //tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
