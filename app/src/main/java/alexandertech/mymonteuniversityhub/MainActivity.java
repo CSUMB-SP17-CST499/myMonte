@@ -3,6 +3,7 @@ package alexandertech.mymonteuniversityhub;
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -15,9 +16,11 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
+    private Toolbar toolbar;
+    private TabLayout tabLayout;
     private ViewPager viewPager;
     private DrawerLayout drawerLayout;
-    private TabLayout tabLayout;
+    private ViewPagerAdapter viewPagerAdapter;
     private String[] pageTitle = {"myPlanner", "News", "Parking"};
 
     @Override
@@ -26,11 +29,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         viewPager = (ViewPager)findViewById(R.id.view_pager);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        //Initializing the drawerlayout
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
 
+        /*
+        setSupportActionBar method takes the toolbar and sets it as
+        the default action bar thus making the toolbar work like a normal
+        action bar.
+         */
         setSupportActionBar(toolbar);
 
         //create default navigation drawer toggle
@@ -45,7 +51,6 @@ public class MainActivity extends AppCompatActivity
         for (int i = 0; i < 3; i++) {
             tabLayout.addTab(tabLayout.newTab().setText(pageTitle[i]));
         }
-        //set gravity for tab bar
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         //handling navigation view item event
@@ -54,12 +59,14 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //set viewpager adapter
-        ViewPagerAdapter pagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(pagerAdapter);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(viewPagerAdapter);
 
         //change Tab selection when swipe ViewPager
         //adding functionality to tab and viewpager to manage each other when a page is changed or when a tab is selected
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+        //tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
     }
 
