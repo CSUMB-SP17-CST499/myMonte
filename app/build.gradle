@@ -33,4 +33,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:10.2.0'
     compile 'com.google.android.gms:play-services:10.2.0'
     testCompile 'junit:junit:4.12'
+
+    compile 'com.google.android.gms:play-services-maps:+'
+    compile 'com.android.support:recyclerview-v7:25.1.1'
 }
