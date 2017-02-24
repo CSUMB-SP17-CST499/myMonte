@@ -1,5 +1,7 @@
 package alexandertech.mymonteuniversityhub;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -10,7 +12,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private ViewPagerAdapter viewPagerAdapter;
     private String[] pageTitle = {"myPlanner", "News", "Parking"};
+    private String studyRooms = "http://library2.csumb.edu/mrbs/mobilenow.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity
 
         //change Tab selection when swipe ViewPager
         //adding functionality to tab and viewpager to manage each other when a page is changed or when a tab is selected
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         //tabLayout.setOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
@@ -80,10 +82,16 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.DinningCommonsItem) {
             viewPager.setCurrentItem(0);
         } else if (id == R.id.LibraryStudyRooms) {
-            viewPager.setCurrentItem(1);
+            Uri uri = Uri.parse(studyRooms);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+           // viewPager.setCurrentItem(1);
         } else if (id == R.id.MapYourRoute) {
             viewPager.setCurrentItem(2);
         } else if (id == R.id.CampusPD) {
+            Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "18316550268"));
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
 
         } else if (id == R.id.close) {
             finish();
