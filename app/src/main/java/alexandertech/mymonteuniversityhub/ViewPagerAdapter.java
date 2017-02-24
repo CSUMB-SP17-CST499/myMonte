@@ -25,7 +25,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
             return new News();
         }
         else{
-            return new ParkingLocator();
+            return new MapsFragment();
         }
     }
 
