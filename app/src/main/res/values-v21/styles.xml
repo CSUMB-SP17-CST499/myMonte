@@ -14,5 +14,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:colorAccent">@color/csumb_blue</item>
         <item name="android:colorPrimaryDark">@color/csumb_blue</item>
+        <item name="android:colorPrimary">@color/cardview_light_background</item>
+        <item name="android:colorBackground">#E0E0e0</item>
     </style>
 </resources>
