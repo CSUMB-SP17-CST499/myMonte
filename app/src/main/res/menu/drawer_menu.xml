@@ -24,4 +24,6 @@
         android:id="@+id/close"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="Close this App" />
+    <item android:title="Login with OKTA!"
+        android:id="@+id/Login" />
 </menu>

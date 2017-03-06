@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPagerAdapter viewPagerAdapter;
     private String[] pageTitle = {"myPlanner", "News", "Parking"};
     private String studyRooms = "http://library2.csumb.edu/mrbs/mobilenow.php";
-
+    private String food = "https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +80,11 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.DinningCommonsItem) {
+            //Menu item for dining commons
+            //Refer to variable food to change it's refrence
+            Uri uri = Uri.parse(food);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
             viewPager.setCurrentItem(0);
         } else if (id == R.id.LibraryStudyRooms) {
             Uri uri = Uri.parse(studyRooms);
@@ -95,6 +100,10 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.close) {
             finish();
+        }
+        else if (id == R.id.Login){
+            Intent intent = new Intent(MainActivity.this, oktaLogin.class);
+            startActivity(intent);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
