@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">#E0E0e0</item>
     </style>
 
     <style name="csumb_theme" parent="Theme.AppCompat.Light.NoActionBar">

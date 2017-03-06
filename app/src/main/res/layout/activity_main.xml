@@ -13,9 +13,9 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?android:attr/actionBarSize"
         app:popupTheme="@style/csumb_theme"
-        android:theme="@style/csumb_theme"
-        app:titleTextColor="@android:color/white" />
+        android:theme="@style/csumb_theme">
 
+    </android.support.v7.widget.Toolbar>
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
@@ -31,7 +31,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/toolbar"
-                android:minHeight="?attr/actionBarSize" />
+                android:minHeight="?attr/actionBarSize"
+                android:background="#eeeeee">
+            </android.support.design.widget.TabLayout>
 
             <android.support.v4.view.ViewPager
                 android:id="@+id/view_pager"
