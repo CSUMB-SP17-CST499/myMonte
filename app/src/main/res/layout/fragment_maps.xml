@@ -1,4 +1,4 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,6 +8,26 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/googleMap"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
-</FrameLayout>
+        android:layout_height="500dp" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/saveLocationButton"
+            android:text="Save Parking Location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/retrieveLocation"
+            android:text="LastParking Location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
