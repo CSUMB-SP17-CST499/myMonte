@@ -1,4 +1,4 @@
-package alexandertech.mymonteuniversityhub;
+package alexandertech.mymonteuniversityhub.Fragments;
 
 
 import android.os.Bundle;
@@ -19,7 +19,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class myPlanner extends Fragment {
+import alexandertech.mymonteuniversityhub.Adapters.TaskAdapter;
+import alexandertech.mymonteuniversityhub.Classes.Task;
+import alexandertech.mymonteuniversityhub.R;
+
+public class PlannerFragment extends Fragment {
 
     private TaskAdapter taskAdapter;
 
@@ -28,16 +32,16 @@ public class myPlanner extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
     /**
-     * Title: myPlanner
+     * Title: PlannerFragment
      * Authors: Joseph Molina, Anthony Symkowick
      * Date: 2/17/2017
-     * Description: This file instantiates and connects the objects necessary for the myPlanner activity, including
+     * Description: This file instantiates and connects the objects necessary for the PlannerFragment activity, including
      * a Calendar and a TaskList. The calendar will show students at-a-glance info about upcoming events via a custom Dialog.
      * The TaskList will be a dynamic set of Cards filled with user-defined TODO items.
      */
 
-        // XML Layout is inflated for fragment_myplanner
-        View v = inflater.inflate(R.layout.fragment_myplanner, container, false);
+        // XML Layout is inflated for fragment_planner
+        View v = inflater.inflate(R.layout.fragment_planner, container, false);
 
         /*
          * Before we return the inflated view, we will instantiate a RecyclerView object and reference the xml element.

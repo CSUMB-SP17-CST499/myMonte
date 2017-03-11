@@ -1,4 +1,4 @@
-package alexandertech.mymonteuniversityhub;
+package alexandertech.mymonteuniversityhub.Activities;
 
 import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
@@ -24,6 +24,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
 
+import alexandertech.mymonteuniversityhub.Fragments.MapsFragment;
+import alexandertech.mymonteuniversityhub.Fragments.NewsFragment;
+import alexandertech.mymonteuniversityhub.Fragments.PlannerFragment;
+import alexandertech.mymonteuniversityhub.R;
+import alexandertech.mymonteuniversityhub.oktaLogin;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -32,7 +38,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private DrawerLayout drawerLayout;
-    private String[] pageTitle = {"myPlanner", "News", "Parking"};
+    private String[] pageTitle = {"PlannerFragment", "NewsFragment", "Parking"};
     private String studyRooms = "http://library2.csumb.edu/mrbs/mobilenow.php";
     public static String MYPREFERENCE = "myPref";
     private String food = "https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
@@ -40,7 +46,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity
 
 
         //setting Tab layout (number of Tabs = number of ViewPager pages)
-        //viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -100,7 +105,7 @@ public class MainActivity extends AppCompatActivity
 
     class PagerAdapter extends FragmentPagerAdapter{
 
-        String tabTitles[] = new String[]{"myPlanner", "News", "Parking"};
+        String tabTitles[] = new String[]{"PlannerFragment", "NewsFragment", "Parking"};
         public Fragment[] fragments = new Fragment[tabTitles.length];
         Context context;
 
@@ -118,9 +123,9 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position){
             switch (position){
                 case 0:
-                    return new myPlanner();
+                    return new PlannerFragment();
                 case 1:
-                    return new News();
+                    return new NewsFragment();
                 case 2:
                     return new MapsFragment();
             }

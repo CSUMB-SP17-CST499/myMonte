@@ -1,4 +1,4 @@
-package alexandertech.mymonteuniversityhub;
+package alexandertech.mymonteuniversityhub.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,6 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+
+import alexandertech.mymonteuniversityhub.Classes.Task;
+import alexandertech.mymonteuniversityhub.R;
 
 /**
  * Created by aymswick on 2/18/17.

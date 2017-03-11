@@ -1,4 +1,4 @@
-package alexandertech.mymonteuniversityhub;
+package alexandertech.mymonteuniversityhub.Fragments;
 
 import android.content.Context;
 import android.net.Uri;
@@ -22,7 +22,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class News extends Fragment {
+import alexandertech.mymonteuniversityhub.R;
+
+public class NewsFragment extends Fragment {
 
     @Nullable
     @Override

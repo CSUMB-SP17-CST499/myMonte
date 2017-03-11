@@ -1,4 +1,4 @@
-package alexandertech.mymonteuniversityhub;
+package alexandertech.mymonteuniversityhub.Classes;
 
 import java.util.Date;
 

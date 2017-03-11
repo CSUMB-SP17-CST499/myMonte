@@ -1,4 +1,4 @@
-package alexandertech.mymonteuniversityhub;
+package alexandertech.mymonteuniversityhub.Fragments;
 
 import android.Manifest;
 import android.content.DialogInterface;
@@ -36,6 +36,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import alexandertech.mymonteuniversityhub.MainActivity;
+import alexandertech.mymonteuniversityhub.R;
 
 import static android.R.id.edit;
 import static android.content.Context.MODE_PRIVATE;
