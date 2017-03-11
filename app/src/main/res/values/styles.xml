@@ -14,4 +14,8 @@
         <item name="colorPrimaryDark">@color/csumb_blue</item>
     </style>
 
+    <style name="csumb_theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="csumb_theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
 </resources>
