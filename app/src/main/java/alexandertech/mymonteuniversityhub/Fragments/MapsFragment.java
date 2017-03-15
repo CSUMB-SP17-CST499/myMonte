@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -37,10 +38,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import alexandertech.mymonteuniversityhub.MainActivity;
+import alexandertech.mymonteuniversityhub.Activities.MainActivity;
 import alexandertech.mymonteuniversityhub.R;
 
-import static android.R.id.edit;
 import static android.content.Context.MODE_PRIVATE;
 
 

@@ -34,5 +34,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-maps:+'
     compile 'com.android.support:recyclerview-v7:25.1.1'
-   // compile 'com.android.support:support-v13:v13'
+    compile files('libs/glide-3.7.0-javadoc.jar')
 }

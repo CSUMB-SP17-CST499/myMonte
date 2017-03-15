@@ -1,13 +1,17 @@
 package alexandertech.mymonteuniversityhub.Activities;
 
-import android.content.DialogInterface;
-import android.support.v4.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.GravityCompat;
@@ -28,25 +32,33 @@ import alexandertech.mymonteuniversityhub.Fragments.MapsFragment;
 import alexandertech.mymonteuniversityhub.Fragments.NewsFragment;
 import alexandertech.mymonteuniversityhub.Fragments.PlannerFragment;
 import alexandertech.mymonteuniversityhub.R;
-import alexandertech.mymonteuniversityhub.oktaLogin;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private DrawerLayout drawerLayout;
-    private String[] pageTitle = {"PlannerFragment", "NewsFragment", "Parking"};
+    private String[] pageTitle = {"myPlanner", "News", "Parking"};
     private String studyRooms = "http://library2.csumb.edu/mrbs/mobilenow.php";
     public static String MYPREFERENCE = "myPref";
     private String food = "https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
+    private String userEmail = "";
+    private String userFName = "";
+    private String userLname = "";
+    private String userID = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        Bundle extras = getIntent().getExtras();
+        userEmail = extras.getString("Email");
+        userFName = extras.getString("First Name");
+        userLname = extras.getString("Last Name");
+        userID = extras.getString("ID");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setSupportActionBar(toolbar);
@@ -71,10 +83,14 @@ public class MainActivity extends AppCompatActivity
         assert navigationView != null;
         navigationView.setNavigationItemSelectedListener(this);
 
-        viewPager = (ViewPager)findViewById(R.id.view_pager);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
 
+        //setting the initial welcome message from when the user logs in
+        Snackbar.make(findViewById(android.R.id.content), "Welcome, " + userFName + "!", Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.BLUE)
+                .show();
 
         //setting Tab layout (number of Tabs = number of ViewPager pages)
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -83,6 +99,7 @@ public class MainActivity extends AppCompatActivity
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
+
 
             @Override
             public void onPageSelected(int position) {
@@ -103,9 +120,10 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+
     class PagerAdapter extends FragmentPagerAdapter{
 
-        String tabTitles[] = new String[]{"PlannerFragment", "NewsFragment", "Parking"};
+        String tabTitles[] = new String[]{"myPlanner", "News", "Parking"};
         public Fragment[] fragments = new Fragment[tabTitles.length];
         Context context;
 
@@ -168,14 +186,38 @@ public class MainActivity extends AppCompatActivity
     Method for the navigation Drawer that takes in the id from the navigation drawer
     and based on the view, an action will be performed.
      */
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
+        if (id == R.id.grades){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            WebView wv = new WebView(this);
+            //url for the web api to get the users grades.
+            wv.loadUrl("https://monteapp.me/moodle/monteapi/getGrades.php?id="+userID);
+            wv.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
+
+            alert.setView(wv);
+            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
+        }
+
         if (id == R.id.DinningCommonsItem) {
            // viewPager.setCurrentItem(0);
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Title here");
+            alert.setTitle("DC Food");
 
             WebView wv = new WebView(this);
             WebSettings webSettings = wv.getSettings();
@@ -200,9 +242,36 @@ public class MainActivity extends AppCompatActivity
             alert.show();
 
         } else if (id == R.id.LibraryStudyRooms) {
-            Uri uri = Uri.parse(studyRooms);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            //Uri uri = Uri.parse(studyRooms);
+            //Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            //startActivity(intent);
+
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Study room reserve");
+
+            WebView wv = new WebView(this);
+            WebSettings webSettings = wv.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            wv.loadUrl(studyRooms);
+            wv.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+
+                    return true;
+                }
+            });
+
+            alert.setView(wv);
+            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
+
+
            // viewPager.setCurrentItem(1);
         } else if (id == R.id.MapYourRoute) {
             viewPager.setCurrentItem(2);
@@ -213,10 +282,6 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.close) {
             finish();
-        }
-        else if (id == R.id.Login){
-            Intent intent = new Intent(MainActivity.this, oktaLogin.class);
-            startActivity(intent);
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

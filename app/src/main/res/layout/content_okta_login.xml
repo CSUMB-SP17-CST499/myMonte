@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="alexandertech.mymonteuniversityhub.oktaLogin"
+    tools:context="alexandertech.mymonteuniversityhub.Activities.oktaLogin"
     tools:showIn="@layout/activity_okta_login">
 
     <WebView
