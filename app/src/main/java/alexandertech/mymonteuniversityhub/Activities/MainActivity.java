@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     view.loadUrl(url);
                     return true;
-                }
+                        }
             });
 
             alert.setView(wv);
