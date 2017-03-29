@@ -94,28 +94,6 @@ public class MainActivity extends AppCompatActivity
 
         //setting Tab layout (number of Tabs = number of ViewPager pages)
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-
-            @Override
-            public void onPageSelected(int position) {
-                Fragment frag = pagerAdapter.fragments[position];
-                if(frag != null && frag instanceof MapsFragment){
-                    Toast.makeText(MainActivity.this, "On page Selected", Toast.LENGTH_LONG).show();
-
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-
-            }
-        });
-       // viewPager.setOffscreenPageLimit(3);
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
     }
