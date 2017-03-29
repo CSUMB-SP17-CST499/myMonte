@@ -343,11 +343,12 @@ public String  lastName ="";
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            boolean isConnected = false;
 
             try {
                 DataOutputStream printout;
                 URL url = new URL("https://dev-809657.oktapreview.com/api/v1/authn");
-                HttpURLConnection  connection = (HttpURLConnection) url.openConnection();
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.setDoOutput(true);
                 connection.setInstanceFollowRedirects(false);
@@ -366,28 +367,26 @@ public String  lastName ="";
                 printout.flush();
                 printout.close();
                 System.out.println(connection.getResponseCode());
-                if (connection.getResponseCode() == 400 || connection.getResponseCode() == 401 ||  connection.getResponseCode() == 403 ||  connection.getResponseCode() == 404){
+                if (connection.getResponseCode() == 400 || connection.getResponseCode() == 401 || connection.getResponseCode() == 403 || connection.getResponseCode() == 404) {
                     return false;
-                }
-                else if(connection.getResponseCode() == 200){
+                } else if (connection.getResponseCode() == 200) {
                     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     StringBuilder sb = new StringBuilder();
                     String line;
-
                     while ((line = br.readLine()) != null) {
                         System.out.println(line.toString());
-                        sb.append(line+"\n");
+                        sb.append(line + "\n");
                         String someline = "[ " + line.toString() + "]";
                         System.out.println(someline);
                         JSONArray jArray = new JSONArray(someline);
                         int n = jArray.length();
-                        for (int i=0; i<n; i++){
+                        for (int i = 0; i < n; i++) {
                             String str = "[" + jArray.getJSONObject(i).getString("_embedded") + "]";
                             JSONArray userData = new JSONArray(str);
                             System.out.println(userData.toString());
-                            for (int j = 0; j<userData.length(); j++){
+                            for (int j = 0; j < userData.length(); j++) {
                                 String str1 = "[" + userData.getJSONObject(i).getString("user") + "]";
-                               System.out.println(str1);
+                                System.out.println(str1);
                                 JSONArray data = new JSONArray(str1);
                                 String profile = "[" + data.getJSONObject(i).getString("profile") + "]";
                                 System.out.println(profile);
@@ -395,13 +394,13 @@ public String  lastName ="";
 
                                 String fName = profileData.getJSONObject(i).getString("firstName");
                                 String lName = profileData.getJSONObject(i).getString("lastName");
-                                String uEmail = profileData.getJSONObject(i).getString("login") ;
+                                String uEmail = profileData.getJSONObject(i).getString("login");
                                 System.out.println("Welcome, " + fName + " " + lName + " Email is: " + uEmail);
                                 firstName = fName;
                                 lastName = lName;
-                                emailAdd =uEmail;
-                                URL idURL = new URL("https://monteapp.me/moodle/monteapi/getID.php?email="+emailAdd);
-                                HttpURLConnection  moodleconnection = (HttpURLConnection) idURL.openConnection();
+                                emailAdd = uEmail;
+                                URL idURL = new URL("https://monteapp.me/moodle/monteapi/getID.php?email=" + emailAdd);
+                                HttpURLConnection moodleconnection = (HttpURLConnection) idURL.openConnection();
                                 moodleconnection.setRequestMethod("GET");
                                 BufferedReader moodlebr = new BufferedReader(new InputStreamReader(moodleconnection.getInputStream()));
                                 StringBuilder moodlesb = new StringBuilder();
@@ -414,17 +413,12 @@ public String  lastName ="";
 
                                     String userIDfromServer = idData.getJSONObject(i).getString("ID");
                                     userID = userIDfromServer;
+                                    isConnected = true;
                                 }
 
                             }
-                            //String profile = "[" + userData.getJSONObject(i).getString("profile");
-                            //System.out.println(profile);
 
                         }
-//                        if (line.contains("Profile")){
-//                            System.out.println(line.toString());
-//                            userData user = new userData();
-//                        }
                     }
 
 
@@ -441,9 +435,14 @@ public String  lastName ="";
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            if (isConnected) {
+                return true;
+            } else {
+                return false;
+            }
 
-            return true;
         }
+
 
         @Override
         protected void onPostExecute(final Boolean success) {
@@ -451,12 +450,6 @@ public String  lastName ="";
             showProgress(false);
 
             if (success) {
-
-
-
-                //CALL ALL BACKGROUND LOADERS HERE
-
-
                 Intent mainActivity  = new Intent(LoginActivity.this, MainActivity.class);
                 mainActivity.putExtra("First Name", firstName);
                 mainActivity.putExtra("Last Name", lastName);
