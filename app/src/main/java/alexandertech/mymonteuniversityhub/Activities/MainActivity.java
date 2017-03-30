@@ -3,6 +3,7 @@ package alexandertech.mymonteuniversityhub.Activities;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -37,6 +38,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Toolbar toolbar;
+    public static final String MY_PREFS_NAME = "MyPrefsFile";
+    public static SharedPreferences sharedPrefs;
+    public static SharedPreferences.Editor prefs;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
@@ -54,6 +58,11 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        sharedPrefs = getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
+        prefs = sharedPrefs.edit();
+
+
         Bundle extras = getIntent().getExtras();
         userEmail = extras.getString("Email");
         userFName = extras.getString("First Name");

@@ -1,33 +1,31 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
     <com.google.android.gms.maps.MapView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/googleMap"
-        android:layout_width="match_parent"
-        android:layout_height="500dp" />
+        android:paddingTop="15dp"
+        android:id="@+id/mapview"
+        android:layout_width="fill_parent"
+        android:layout_height="300dp" />
 
-    <LinearLayout
-        android:orientation="horizontal"
+    <Button
+        android:id="@+id/saveLocationButton"
+        android:layout_below="@+id/mapview"
+        android:text="Save Location"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/saveLocationButton"
-            android:text="Save Parking Location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/retrieveLocation"
-            android:text="LastParking Location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <Button
+        android:id="@+id/lastParkingLocationButton"
+        android:text="Last Parking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mapview"
+        android:layout_alignParentEnd="true" />
 
-    </LinearLayout>
-
-
-
-</LinearLayout>
+</RelativeLayout>
