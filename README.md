@@ -1,5 +1,5 @@
 
 # MyMonte
 
-## visit [monteapp.me}: www.monteapp.me for documentation!
+## visit [monteapp.me]: www.monteapp.me for documentation!
  
