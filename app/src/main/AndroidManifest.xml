@@ -29,17 +29,8 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/csumb_theme">
-        <activity android:name=".Activities.MainActivity">
-
-            <!--
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter> !
-            -->
-        </activity>
-
+        <activity android:name=".Activities.MainActivity"></activity>
+        <activity android:name=".Activities.LoginActivity"></activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -52,22 +43,14 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".Activities.oktaLogin"
-            android:label="@string/title_activity_okta_login">
-            android:theme="@style/csumb_theme" />
-        </activity>
-        <activity android:name=".Activities.LoginActivity">
+
+        <activity android:name=".Activities.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            android:label="@string/title_activity_login">
         </activity>
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
     </application>
 
 </manifest>
