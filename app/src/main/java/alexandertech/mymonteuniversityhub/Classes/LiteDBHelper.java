@@ -107,7 +107,7 @@ public boolean getUserLoginStatus(){
         }
         return " ";
     }
-    //Need to addmethod CheckSessionDate, that queries the db, get the insert date and make sure it's not 2 weeks (14 days old) otherwise we grab the session ID and run the delete method. 
+    //Need to addmethod Boolean CheckSessionDate, that queries the db, get the insert date and make sure it's not 2 weeks (14 days old) otherwise we grab the session ID and run the delete method. 
     //Session is now invalid
     
     //method to log the user out. 
