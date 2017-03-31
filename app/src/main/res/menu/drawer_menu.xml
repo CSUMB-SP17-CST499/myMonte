@@ -26,6 +26,12 @@
         android:title="Campus PD" />
 
     <item
+        android:id="@+id/logout"
+        android:icon="@android:drawable/ic_input_delete"
+        android:title="Logout" />
+
+
+    <item
         android:id="@+id/close"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="Close this App" />

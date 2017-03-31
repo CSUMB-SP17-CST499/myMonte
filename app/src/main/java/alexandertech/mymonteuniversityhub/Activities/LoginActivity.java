@@ -46,6 +46,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -58,6 +59,7 @@ public String firstName = "";
 public String  lastName ="";
     public String emailAdd= "";
     public String userID = "";
+    private String sessionKey = " ";
     /**
      * Id to identity READ_CONTACTS permission request.
      */
@@ -381,6 +383,7 @@ public String  lastName ="";
                         JSONArray jArray = new JSONArray(someline);
                         int n = jArray.length();
                         for (int i = 0; i < n; i++) {
+                             sessionKey = jArray.getJSONObject(i).getString("sessionToken");
                             String str = "[" + jArray.getJSONObject(i).getString("_embedded") + "]";
                             JSONArray userData = new JSONArray(str);
                             System.out.println(userData.toString());
@@ -456,6 +459,8 @@ public String  lastName ="";
                 mainActivity.putExtra("Email", emailAdd);
                 mainActivity.putExtra("ID", userID);
                 startActivity(mainActivity);
+                LiteDBHelper StoreUser = new LiteDBHelper(getApplicationContext());
+                StoreUser.storeAccount(firstName, lastName, emailAdd, sessionKey, userID);
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

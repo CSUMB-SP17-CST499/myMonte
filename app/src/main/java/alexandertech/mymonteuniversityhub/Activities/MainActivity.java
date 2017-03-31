@@ -27,8 +27,8 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 
+import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.Fragments.MapsFragment;
 import alexandertech.mymonteuniversityhub.Fragments.NewsFragment;
 import alexandertech.mymonteuniversityhub.Fragments.PlannerFragment;
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     private String userFName = "";
     private String userLname = "";
     private String userID = "";
+    private String SESSION_ID = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity
         userFName = extras.getString("First Name");
         userLname = extras.getString("Last Name");
         userID = extras.getString("ID");
+        SESSION_ID = extras.getString("SessionKey");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setSupportActionBar(toolbar);
@@ -258,7 +260,6 @@ public class MainActivity extends AppCompatActivity
             });
             alert.show();
 
-
            // viewPager.setCurrentItem(1);
         } else if (id == R.id.MapYourRoute) {
             viewPager.setCurrentItem(2);
@@ -266,6 +267,17 @@ public class MainActivity extends AppCompatActivity
             Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "18316550268"));
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
+        }else if (id == R.id.logout){
+            LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
+            if(dbFlush.logout(SESSION_ID)){
+                Intent redirectToLogin = new Intent (MainActivity.this, LoginActivity.class);
+                startActivity(redirectToLogin);
+            }
+            else {
+                Snackbar.make(findViewById(android.R.id.content), "There was an error, please uninstall the app to clear  the account!" , Snackbar.LENGTH_LONG)
+                        .setActionTextColor(Color.RED)
+                        .show();
+            }
 
         } else if (id == R.id.close) {
             finish();

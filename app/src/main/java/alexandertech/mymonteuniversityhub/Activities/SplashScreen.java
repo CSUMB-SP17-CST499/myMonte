@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.R;
 
 public class SplashScreen extends AppCompatActivity {
@@ -28,33 +29,35 @@ public class SplashScreen extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
+            LiteDBHelper status = new LiteDBHelper(getApplicationContext());
+            boolean isLoggedIn = status.getUserLoginStatus();
             try {
-                Thread.sleep(2000);
+                Thread.sleep(500);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
             //returning false because perm login has NOT been set up therefor the isSessionvalid function in onPostExecute will not return true and show mainact.
-            return false;
+            return isLoggedIn;
 
         }
 
         @Override
         protected void onPostExecute(final Boolean isSessionValid) {
-
+            LiteDBHelper status = new LiteDBHelper(getApplicationContext());
             //here the session from the database is still valid... therefore we proceed with auto login
             if (isSessionValid) {
                 Intent MainActivity = new Intent(SplashScreen.this, MainActivity.class);
-                MainActivity.putExtra("First Name", "Javar");
-                MainActivity.putExtra("Last Name", "Alexander");
-                MainActivity.putExtra("Email", "Jaalexander@csumb.edu");
-                MainActivity.putExtra("ID", "4");
+                MainActivity.putExtra("First Name", status.getFName());
+                MainActivity.putExtra("Last Name", status.getLName());
+                MainActivity.putExtra("Email", status.getEmail());
+                MainActivity.putExtra("ID", status.getID());
+                MainActivity.putExtra("SessionKey", status.getSessionKey());
                 startActivity(MainActivity);
-
             }
             //session is NOT valid, therefore we go to the login screen.
             else {
-                Intent LoginScreen = new Intent(SplashScreen.this, LoginActivity.class);
-                startActivity(LoginScreen);
+                Intent SplashScreenRedirect = new Intent(SplashScreen.this, LoginActivity.class);
+                startActivity(SplashScreenRedirect);
             }
 
 
