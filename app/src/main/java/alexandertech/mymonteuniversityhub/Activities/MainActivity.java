@@ -271,6 +271,8 @@ public class MainActivity extends AppCompatActivity
             LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
             if(dbFlush.logout(SESSION_ID)){
                 Intent redirectToLogin = new Intent (MainActivity.this, LoginActivity.class);
+                redirectToLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                finish();
                 startActivity(redirectToLogin);
             }
             else {

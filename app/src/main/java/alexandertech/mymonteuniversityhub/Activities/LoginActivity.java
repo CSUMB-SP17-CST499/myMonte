@@ -461,7 +461,7 @@ public String  lastName ="";
                 startActivity(mainActivity);
                 LiteDBHelper StoreUser = new LiteDBHelper(getApplicationContext());
                 StoreUser.storeAccount(firstName, lastName, emailAdd, sessionKey, userID);
-
+                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

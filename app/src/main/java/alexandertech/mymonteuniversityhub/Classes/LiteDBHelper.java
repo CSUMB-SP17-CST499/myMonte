@@ -50,7 +50,9 @@ public boolean getUserLoginStatus(){
     SQLiteDatabase myDB = this.getWritableDatabase();
     String CheckIfSessionExists = "SELECT * FROM ActiveSessions";
     Cursor cursor = myDB.rawQuery(CheckIfSessionExists, null);
+
     if (cursor.moveToFirst()) {
+
         session = true;
     } else {
         session = false;
@@ -103,16 +105,18 @@ public boolean getUserLoginStatus(){
         String SeshKey = "SELECT SessionKey FROM ActiveSessions";
         Cursor cursor = myDB.rawQuery(SeshKey, null);
         if (cursor.moveToFirst()) {
+
             return cursor.getString(0);
         }
         return " ";
     }
+
     //Need to addmethod Boolean CheckSessionDate, that queries the db, get the insert date and make sure it's not 2 weeks (14 days old) otherwise we grab the session ID and run the delete method. 
     //Session is now invalid
     
     //method to log the user out. 
 public boolean logout(String SESSION){
-    Boolean isDeleted = true;
+    Boolean isDeleted = false;
     SQLiteDatabase myDB = this.getWritableDatabase();
     String statement = "DELETE FROM ActiveSessions WHERE SessionKey = '"+SESSION+"';";
     myDB.execSQL(statement);
@@ -123,6 +127,7 @@ public boolean logout(String SESSION){
     } else {
         isDeleted = true;
     }
+    myDB.close();
     return isDeleted;
 }
     @Override

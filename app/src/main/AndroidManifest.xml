@@ -42,7 +42,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
+            <!--android:value="@string/google_maps_key" />-->
+<!---->
 
         <activity android:name=".Activities.SplashScreen">
             <intent-filter>
@@ -51,6 +52,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+        <service android:name=".Classes.MyFirebaseInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"></action>
+            </intent-filter>
+        </service>
+        <service android:name=".Classes.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENTT"></action>
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>
