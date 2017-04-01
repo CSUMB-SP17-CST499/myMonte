@@ -40,7 +40,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import org.json.JSONObject;
 import java.io.BufferedReader;
@@ -52,8 +51,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import alexandertech.mymonteuniversityhub.Activities.MainActivity;
 import alexandertech.mymonteuniversityhub.Classes.DataParser;
 import alexandertech.mymonteuniversityhub.R;
 
@@ -106,6 +103,7 @@ public class MapsFragment extends Fragment implements
         }
         return view;
     }
+
 
     //Call back method for when map is ready to be used.
     @Override
@@ -231,6 +229,7 @@ public class MapsFragment extends Fragment implements
     @Override
     public void onStart() {
         super.onStart();
+
         mGoogleApiClient.connect();
         settingsRequest();
     }
