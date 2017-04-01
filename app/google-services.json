@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "20508886106",
+    "firebase_url": "https://mymonte-2e62b.firebaseio.com",
+    "project_id": "mymonte-2e62b",
+    "storage_bucket": "mymonte-2e62b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20508886106:android:672bd90db471339a",
+        "android_client_info": {
+          "package_name": "alexandertech.mymonteuniversityhub"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20508886106-rlj94k9c4r9catpii96lbdtelt0ucu5g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQnAlW8Fibs3pk3VIHIKVl6FusTOF2yyA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

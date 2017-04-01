@@ -11,17 +11,29 @@
         android:title="@string/library_study_room_reservation" />
 
     <item
+        android:id="@+id/grades"
+        android:title="View Course Grades"
+        android:icon="@mipmap/ic_school_black_24dp"/>
+
+    <item
         android:id="@+id/MapYourRoute"
         android:icon="@mipmap/ic_directions_black_24dp"
         android:title="Map Your Route" />
 
     <item
-        android:id="@+id/go"
-        android:icon="@android:drawable/ic_menu_call"
+        android:id="@+id/CampusPD"
+        android:icon="@mipmap/ic_phone_in_talk_black_24dp"
         android:title="Campus PD" />
+
+    <item
+        android:id="@+id/logout"
+        android:icon="@android:drawable/ic_input_delete"
+        android:title="Logout" />
+
 
     <item
         android:id="@+id/close"
         android:icon="@android:drawable/ic_menu_info_details"
         android:title="Close this App" />
+
 </menu>

@@ -6,6 +6,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">#E0E0e0</item>
     </style>
+
+    <style name="csumb_theme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/cardview_light_background</item>
+        <item name="colorPrimaryDark">@color/csumb_blue</item>
+    </style>
+
+    <style name="csumb_theme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="csumb_theme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

@@ -22,6 +22,28 @@
         <item>Dummy Item 14</item>
 
 
-
     </string-array>
+    <string name="title_activity_maps">Map</string>
+    <string name="redirectURL">com.oktapreview.dev-568843</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_okta_login">oktaLogin</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">otterID</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in!</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This otterID is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="dialog_message">This will remove your previously saved location.</string>
+    <string name="dialog_title">Save new parking location?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
