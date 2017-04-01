@@ -32,7 +32,7 @@ public class SplashScreen extends AppCompatActivity {
             LiteDBHelper status = new LiteDBHelper(getApplicationContext());
             boolean isLoggedIn = status.getUserLoginStatus();
             try {
-                Thread.sleep(500);
+                Thread.sleep(1200);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
