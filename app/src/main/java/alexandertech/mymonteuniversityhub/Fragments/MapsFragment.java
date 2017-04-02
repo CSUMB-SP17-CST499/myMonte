@@ -2,9 +2,11 @@ package alexandertech.mymonteuniversityhub.Fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -53,9 +55,8 @@ import java.util.HashMap;
 import java.util.List;
 import alexandertech.mymonteuniversityhub.Classes.DataParser;
 import alexandertech.mymonteuniversityhub.R;
+import android.content.SharedPreferences;
 
-import static alexandertech.mymonteuniversityhub.Activities.MainActivity.prefs;
-import static alexandertech.mymonteuniversityhub.Activities.MainActivity.sharedPrefs;
 
 
 public class MapsFragment extends Fragment implements
@@ -68,6 +69,7 @@ public class MapsFragment extends Fragment implements
     private GoogleMap mGoogleMap;
     private GoogleApiClient mGoogleApiClient;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private SharedPreferences sharedPrefs;
 
     private Location mLastLocation;
     private MapView mMapView;
@@ -163,6 +165,8 @@ public class MapsFragment extends Fragment implements
                                     Toast.LENGTH_SHORT).show();
                             String longitude = String.valueOf(currentParkingLocation.longitude);
                             String latitude = String.valueOf(currentParkingLocation.latitude);
+                            sharedPrefs = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor prefs = sharedPrefs.edit();
                             prefs.putString("location", latitude + "," + longitude);
                             prefs.apply();
                             Toast.makeText(getActivity(), "Parking Location Saved!",

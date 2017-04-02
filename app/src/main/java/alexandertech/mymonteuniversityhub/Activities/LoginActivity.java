@@ -5,10 +5,12 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.LoaderManager.LoaderCallbacks;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -20,6 +22,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -454,10 +457,8 @@ public String  lastName ="";
 
             if (success) {
                 Intent mainActivity  = new Intent(LoginActivity.this, MainActivity.class);
-                mainActivity.putExtra("First Name", firstName);
-                mainActivity.putExtra("Last Name", lastName);
-                mainActivity.putExtra("Email", emailAdd);
-                mainActivity.putExtra("ID", userID);
+                putUserDataIntoSharedPreferences();
+
                 startActivity(mainActivity);
                 LiteDBHelper StoreUser = new LiteDBHelper(getApplicationContext());
                 StoreUser.storeAccount(firstName, lastName, emailAdd, sessionKey, userID);
@@ -473,6 +474,19 @@ public String  lastName ="";
             mAuthTask = null;
             showProgress(false);
         }
+
+        private void putUserDataIntoSharedPreferences() {
+            SharedPreferences sharedPreferences = getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("First Name", firstName);
+            editor.putString("Last Name", lastName);
+            editor.putString("Email", emailAdd);
+            editor.putString("ID", userID);
+            Log.d("SharedPrefs", "!!!!userID at Login " + userID + " !!!!");
+            editor.apply();
+        }
     }
+
+
 }
 
