@@ -37,7 +37,7 @@ import alexandertech.mymonteuniversityhub.R;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Toolbar toolbar;
+
     public static final String MY_PREFS_NAME = "MyPrefsFile";
     public static SharedPreferences sharedPrefs;
     public static SharedPreferences.Editor prefs;
@@ -54,6 +54,11 @@ public class MainActivity extends AppCompatActivity
     private String userLname = "";
     private String userID = "";
     private String SESSION_ID = "";
+    private int[] tabIcons = {
+            R.mipmap.planner_icon,
+            R.mipmap.ic_school_black_24dp,
+            R.mipmap.ic_directions_car_black_24dp
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,8 @@ public class MainActivity extends AppCompatActivity
         userLname = extras.getString("Last Name");
         userID = extras.getString("ID");
         SESSION_ID = extras.getString("SessionKey");
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setSupportActionBar(toolbar);
@@ -84,8 +91,9 @@ public class MainActivity extends AppCompatActivity
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         for (int i = 0; i < 3; i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(pageTitle[i]));
+            tabLayout.addTab(tabLayout.newTab().setText(pageTitle[i]).setIcon(tabIcons[i]));
         }
+
 
         //set gravity for tab bar
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
@@ -97,6 +105,7 @@ public class MainActivity extends AppCompatActivity
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(1);
 
         //setting the initial welcome message from when the user logs in
         Snackbar.make(findViewById(android.R.id.content), "Welcome, " + userFName + "!", Snackbar.LENGTH_LONG)
@@ -106,6 +115,10 @@ public class MainActivity extends AppCompatActivity
         //setting Tab layout (number of Tabs = number of ViewPager pages)
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+
+    }
+
+    private void setupTabIcons() {
 
     }
 
@@ -155,7 +168,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-    @Override
+   /* @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[],int[] grantResults){
 
         if(requestCode == MapsFragment.MY_PERMISSIONS_REQUEST_LOCATION){
@@ -168,6 +181,7 @@ public class MainActivity extends AppCompatActivity
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+    */
 
 
 
