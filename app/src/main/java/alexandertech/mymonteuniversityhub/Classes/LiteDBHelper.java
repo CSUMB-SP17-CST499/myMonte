@@ -1,10 +1,16 @@
 package alexandertech.mymonteuniversityhub.Classes;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 /**
  * Created by JAlexander on 3/30/2017.
  */
@@ -130,6 +136,33 @@ public boolean logout(String SESSION){
     myDB.close();
     return isDeleted;
 }
+
+ public void clearSessionFromRemoteDB(String ID) throws IOException {
+     String urlParameters = "Task=clearSession&remoteDbId=" +ID;
+     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
+     HttpURLConnection connection = null;
+     connection = (HttpURLConnection) url.openConnection();
+     connection.setDoInput(true);
+     connection.setDoOutput(true);
+     connection.setInstanceFollowRedirects(false);
+     connection.setRequestMethod("GET");
+     connection.connect();
+     System.out.println(connection.getResponseCode());
+ }
+ public void insertSessionIntoRemoteDB (String remoteDbId, String FName, String LName, String AndroidFCMID) throws IOException {
+     String urlParameters = "Task=newUser&FName=" + FName + "&LName="+ LName + "&remoteDBId="+remoteDbId+"&DeviceID=" + AndroidFCMID;
+     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
+
+     HttpURLConnection connection = null;
+         connection = (HttpURLConnection) url.openConnection();
+         connection.setDoInput(true);
+         connection.setDoOutput(true);
+         connection.setInstanceFollowRedirects(false);
+         connection.setRequestMethod("GET");
+         connection.connect();
+         System.out.println(connection.getResponseCode());
+
+ }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -459,8 +460,27 @@ public String  lastName ="";
                 mainActivity.putExtra("Email", emailAdd);
                 mainActivity.putExtra("ID", userID);
                 startActivity(mainActivity);
-                LiteDBHelper StoreUser = new LiteDBHelper(getApplicationContext());
+                final LiteDBHelper StoreUser = new LiteDBHelper(getApplicationContext());
                 StoreUser.storeAccount(firstName, lastName, emailAdd, sessionKey, userID);
+                final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
+
+
+                final Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            StoreUser.insertSessionIntoRemoteDB(userID, firstName, lastName, firebaseID.getFirebaseAndroidID());
+
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+                thread.start();
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
