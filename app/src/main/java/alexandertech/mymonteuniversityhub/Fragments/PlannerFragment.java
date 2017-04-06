@@ -2,18 +2,26 @@ package alexandertech.mymonteuniversityhub.Fragments;
 
 
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
  * A simple {@link Fragment} subclass.
  */
 import android.support.annotation.Nullable;
+import android.widget.Button;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,8 +48,18 @@ public class PlannerFragment extends Fragment {
      * The TaskList will be a dynamic set of Cards filled with user-defined TODO items.
      */
 
+
         // XML Layout is inflated for fragment_planner
         View v = inflater.inflate(R.layout.fragment_planner, container, false);
+
+        //Instantiate FAB
+        FloatingActionButton addTaskFab = (FloatingActionButton) v.findViewById(R.id.fab);
+        addTaskFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                launchAddTaskDialog();
+            }
+        });
 
         /*
          * Before we return the inflated view, we will instantiate a RecyclerView object and reference the xml element.
@@ -56,6 +74,7 @@ public class PlannerFragment extends Fragment {
             LinearLayoutManager llm = new LinearLayoutManager(getContext());
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             recList.setLayoutManager(llm);
+
 
             //Dummy Data for tasks to display in the recycler view
             List<Task> tl = new ArrayList<>(); //Create a test List of Tasks
@@ -75,5 +94,17 @@ public class PlannerFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void launchAddTaskDialog() {
+        final BottomSheetDialog addTaskDialog = new BottomSheetDialog(getActivity());
+        View addTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_addtask, null);
+        addTaskDialog.setContentView(addTaskLayout);
+        addTaskDialog.show();
+
+        Button save = (Button) addTaskLayout.findViewById(R.id.btnSaveTask);
+
+        // 1. Send task to the database
+        // 2. Force RecyclerView to refresh
     }
 }
