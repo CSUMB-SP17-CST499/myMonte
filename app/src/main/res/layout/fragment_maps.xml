@@ -1,30 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:layout_height="match_parent">
+
+
 
     <com.google.android.gms.maps.MapView
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:id="@+id/mapview"
         android:layout_width="fill_parent"
-        android:layout_height="400dp" />
+        android:layout_height="450dp" />
 
-    <Button
-        android:id="@+id/saveLocationButton"
-        android:layout_below="@+id/mapview"
-        android:text="Save Location"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <Button
-        android:id="@+id/lastParkingLocationButton"
-        android:text="Last Parking"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mapview"
-        android:layout_alignParentEnd="true" />
+        android:layout_gravity="bottom|end"
+        android:orientation="vertical">
 
-</RelativeLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/GPSFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            app:useCompatPadding="true"
+            android:src="@mipmap/gps"
+            app:backgroundTint="#0D47A1" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/saveFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:src="@mipmap/ic_add_location_black_24dp"
+            app:backgroundTint="#26A69A"
+            app:layout_anchor="@id/GPSFAB"
+            app:layout_anchorGravity="top"
+            app:useCompatPadding="true" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/showDirection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:src="@mipmap/ic_directions_black_24dp"
+            app:backgroundTint="#FFFFFF"
+            app:layout_anchor="@id/saveFAB"
+            app:layout_anchorGravity="top"
+            app:useCompatPadding="true" />
+
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>
