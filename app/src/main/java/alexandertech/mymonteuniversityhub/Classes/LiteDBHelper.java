@@ -128,10 +128,10 @@ public boolean getUserLoginStatus(){
     //Session is now invalid
     
     //method to log the user out. 
-public boolean logout(String SESSION){
-    Boolean isDeleted = false;
+public boolean logout(String SESSION) throws IOException {
+    Boolean isDeleted;
     SQLiteDatabase myDB = this.getWritableDatabase();
-    String statement = "DELETE FROM ActiveSessions WHERE SessionKey = '"+SESSION+"';";
+    String statement = "DELETE FROM ActiveSessions";
     myDB.execSQL(statement);
     String CheckDelete = "SELECT * FROM ActiveSessions";
     Cursor cursor = myDB.rawQuery(CheckDelete, null);
@@ -146,7 +146,7 @@ public boolean logout(String SESSION){
 
  public void clearSessionFromRemoteDB(String ID) throws IOException {
      String urlParameters = "Task=clearSession&remoteDbId=" +ID;
-     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
+     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?Task=clearSession" + urlParameters);
      HttpURLConnection connection = null;
      connection = (HttpURLConnection) url.openConnection();
      connection.setDoInput(true);
@@ -191,7 +191,7 @@ public boolean logout(String SESSION){
      return false;
  }
  public void insertSessionIntoRemoteDB (String remoteDbId, String FName, String LName, String AndroidFCMID) throws IOException {
-     String urlParameters = "Task=newUser&FName=" + FName + "&LName="+ LName + "&remoteDBId="+remoteDbId+"&DeviceID=" + AndroidFCMID;
+     String urlParameters = "Task=newUser&FName=" +FName+ "&LName="+LName+"&remoteDBId="+remoteDbId+"&DeviceID="+AndroidFCMID;
      URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
 
      HttpURLConnection connection = null;
@@ -206,6 +206,27 @@ public boolean logout(String SESSION){
  }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+
+    public void insertTask(String task_title, String mdl_db_id, String due_date, String android_reg_token) throws IOException {
+        System.out.println("tASK:" + task_title);
+        System.out.println("DB ID :" + mdl_db_id);
+        System.out.println("Due Date:" + due_date);
+        System.out.println("Android Token" + android_reg_token);
+        String urlParameters = "task_title=" + task_title + "&mdl_db_id=" + mdl_db_id + "&due_date=" + due_date + "&android_reg_token=" + android_reg_token;
+        //URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&" + urlParameters);
+        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&mdl_db_id="+mdl_db_id+ "&due_date=5-6-94" + "&task_title=" +task_title+ "&android_reg_token=" +android_reg_token);
+        System.out.println(url.toString());
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("GET");
+        connection.connect();
+        System.out.println(connection.getResponseCode());
 
     }
 }

@@ -19,7 +19,6 @@ private static final String REG_TOKEN = "REG_TOKEN";
 
     }
     public String getFirebaseAndroidID(){
-
     return FirebaseInstanceId.getInstance().getToken();
     }
 }

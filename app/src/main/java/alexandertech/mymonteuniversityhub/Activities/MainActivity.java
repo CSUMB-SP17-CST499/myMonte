@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity
     private String food = "https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
     private String userEmail = "";
     private String userFName = "";
-    private String userLname = "";
+    private String userLName = "";
     private String userID = "";
     private String SESSION_ID = "";
     private int[] tabIcons = {
@@ -74,12 +75,20 @@ public class MainActivity extends AppCompatActivity
 
         sharedPrefs = getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
         prefs = sharedPrefs.edit();
-        Bundle extras = getIntent().getExtras();
-        userEmail = extras.getString("Email");
-        userFName = extras.getString("First Name");
-        userLname = extras.getString("Last Name");
-        userID = extras.getString("ID");
-        SESSION_ID = extras.getString("SessionKey");
+
+
+
+//        Bundle extras = getIntent().getExtras();
+//        userEmail = extras.getString("Email");
+//        userFName = extras.getString("First Name");
+//        userLname = extras.getString("Last Name");
+//        userID = extras.getString("ID");
+//        SESSION_ID = extras.getString("SessionKey");
+
+        gatherUserInfoFromSharedPreferences();
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setSupportActionBar(toolbar);
@@ -249,37 +258,39 @@ public class MainActivity extends AppCompatActivity
 
         }else if (id == R.id.logout){
             final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
-            if(dbFlush.logout(SESSION_ID)) {
-
-                final Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            dbFlush.clearSessionFromRemoteDB(userID);
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+            try {
+                if(dbFlush.logout(SESSION_ID)) {
+                    final Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                dbFlush.clearSessionFromRemoteDB(userID);
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            Intent redirectToSpalsh = new Intent(MainActivity.this, SplashScreen.class);
+                            redirectToSpalsh.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            finish();
+                            startActivity(redirectToSpalsh);
                         }
-                        Intent redirectToLogin = new Intent(MainActivity.this, LoginActivity.class);
-                        redirectToLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        finish();
-                        startActivity(redirectToLogin);
-                    }
-                });
-                thread.start();
+                    });
+                    thread.start();
 
-                finish();
-            }
-            else {
-                Snackbar.make(findViewById(android.R.id.content),
-                        "There was an error, please uninstall the app to clear  the account!" ,
-                        Snackbar.LENGTH_LONG)
-                        .setActionTextColor(Color.RED)
-                        .show();
+                    finish();
+                }
+                else {
+                    Snackbar.make(findViewById(android.R.id.content), "There was an error, please uninstall the app to clear  the account!" , Snackbar.LENGTH_LONG)
+                            .setActionTextColor(Color.RED)
+                            .show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
-        } else if (id == R.id.close) {
+        }
+        else if (id == R.id.close) {
             finish();
         }
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -327,6 +338,22 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+    }
+
+    /**
+     * Method to get all userdata from SharedPreferences. This data is instantiated during the LoginActivity and is also referenced
+     * during the SplashScreen Activity
+     */
+    public void gatherUserInfoFromSharedPreferences() {
+        sharedPrefs = getSharedPreferences("MontePrefs",Context.MODE_PRIVATE);
+        userFName = sharedPrefs.getString("First Name", "Monte"); //SharedPreferences retrieval takes Key and DefaultValue as parameters
+        userLName = sharedPrefs.getString("Last Name", "Otter");
+        userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
+        userID = sharedPrefs.getString("ID", "12345");
+        Log.d("SharedPrefs", "!!!!email at MainActivity " + userEmail + " !!!!");
+        Log.d("SharedPrefs", "!!!!userID at MainActivity " + userID + " !!!!");
+        SESSION_ID = sharedPrefs.getString("SessionKey", "sessionkeyerror");
     }
 
 }

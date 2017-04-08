@@ -29,10 +29,10 @@
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog" />
 
     <Button
-        android:text="Button"
+        android:id="@+id/btnSaveTask"
+        style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btnSaveTask"
-        style="@style/Widget.AppCompat.Button.Colored" />
+        android:text="Button" />
 
 </LinearLayout>
