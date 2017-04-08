@@ -28,6 +28,9 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.Fragments.MapsFragment;
 import alexandertech.mymonteuniversityhub.Fragments.NewsFragment;
@@ -194,7 +197,7 @@ public class MainActivity extends AppCompatActivity
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         if (id == R.id.grades){
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -283,12 +286,28 @@ public class MainActivity extends AppCompatActivity
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
         }else if (id == R.id.logout){
-            LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
-            if(dbFlush.logout(SESSION_ID)){
-                Intent redirectToLogin = new Intent (MainActivity.this, LoginActivity.class);
-                redirectToLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
+            if(dbFlush.logout(SESSION_ID)) {
+
+                final Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            dbFlush.clearSessionFromRemoteDB(userID);
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Intent redirectToLogin = new Intent(MainActivity.this, LoginActivity.class);
+                        redirectToLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        finish();
+                        startActivity(redirectToLogin);
+                    }
+                });
+                thread.start();
+
                 finish();
-                startActivity(redirectToLogin);
             }
             else {
                 Snackbar.make(findViewById(android.R.id.content), "There was an error, please uninstall the app to clear  the account!" , Snackbar.LENGTH_LONG)

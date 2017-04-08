@@ -5,7 +5,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.R;
 
 public class SplashScreen extends AppCompatActivity {
@@ -29,15 +34,31 @@ public class SplashScreen extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... arg0) {
-            LiteDBHelper status = new LiteDBHelper(getApplicationContext());
-            boolean isLoggedIn = status.getUserLoginStatus();
+            final LiteDBHelper status = new LiteDBHelper(getApplicationContext());
+            final boolean isLoggedInFromLite = status.getUserLoginStatus();
+            final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
+            boolean isLoggedInFromRemote = false;
+            try {
+                isLoggedInFromRemote = status.checkRemoteSession(firebaseID.getFirebaseAndroidID());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             try {
                 Thread.sleep(1200);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
+            if (isLoggedInFromLite && isLoggedInFromRemote){
+                return true;
+            }
+            else{
+                return false;
+
+            }
             //returning false because perm login has NOT been set up therefor the isSessionvalid function in onPostExecute will not return true and show mainact.
-            return isLoggedIn;
+
 
         }
 

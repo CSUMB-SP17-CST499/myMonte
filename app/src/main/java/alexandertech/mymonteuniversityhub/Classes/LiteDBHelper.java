@@ -1,10 +1,23 @@
 package alexandertech.mymonteuniversityhub.Classes;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 /**
  * Created by JAlexander on 3/30/2017.
  */
@@ -130,6 +143,67 @@ public boolean logout(String SESSION){
     myDB.close();
     return isDeleted;
 }
+
+ public void clearSessionFromRemoteDB(String ID) throws IOException {
+     String urlParameters = "Task=clearSession&remoteDbId=" +ID;
+     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
+     HttpURLConnection connection = null;
+     connection = (HttpURLConnection) url.openConnection();
+     connection.setDoInput(true);
+     connection.setDoOutput(true);
+     connection.setInstanceFollowRedirects(false);
+     connection.setRequestMethod("GET");
+     connection.connect();
+     System.out.println(connection.getResponseCode());
+ }
+ public boolean checkRemoteSession(String AndroidFCMID) throws IOException, JSONException {
+    boolean session  = false;
+     URL url  = new URL("https://monteapp.me/moodle/monteapi/authn/SessionDisable.php?task=checkSession&DeviceID="+AndroidFCMID);
+     HttpURLConnection connection = null;
+     connection = (HttpURLConnection) url.openConnection();
+     connection.setDoInput(true);
+     connection.setDoOutput(true);
+     connection.setInstanceFollowRedirects(false);
+     connection.setRequestMethod("GET");
+     connection.connect();
+     DataOutputStream printout;
+     printout = new DataOutputStream(connection.getOutputStream());
+     JSONObject json = new JSONObject();
+     printout.writeBytes((json.toString()));
+     printout.flush();
+     printout.close();
+     BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+     StringBuilder sb = new StringBuilder();
+     String line;
+     while ((line = br.readLine()) != null) {
+         String someline = "[ " + line.toString() + "]";
+         JSONArray jArray = new JSONArray(someline);
+         for (int i =0; i<jArray.length(); i++){
+         String jsonSession = jArray.getJSONObject(i).getString("Session");
+             if (jsonSession.equals("Active")){
+                 return true;
+             }
+             else{
+                 return false;
+             }
+         }
+     }
+     return false;
+ }
+ public void insertSessionIntoRemoteDB (String remoteDbId, String FName, String LName, String AndroidFCMID) throws IOException {
+     String urlParameters = "Task=newUser&FName=" + FName + "&LName="+ LName + "&remoteDBId="+remoteDbId+"&DeviceID=" + AndroidFCMID;
+     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
+
+     HttpURLConnection connection = null;
+         connection = (HttpURLConnection) url.openConnection();
+         connection.setDoInput(true);
+         connection.setDoOutput(true);
+         connection.setInstanceFollowRedirects(false);
+         connection.setRequestMethod("GET");
+         connection.connect();
+         System.out.println(connection.getResponseCode());
+
+ }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
