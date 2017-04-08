@@ -22,6 +22,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     private String food = "https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
     private String userEmail = "";
     private String userFName = "";
-    private String userLname = "";
+    private String userLName = "";
     private String userID = "";
     private String SESSION_ID = "";
     private int[] tabIcons = {
@@ -72,12 +73,14 @@ public class MainActivity extends AppCompatActivity
         prefs = sharedPrefs.edit();
 
 
-        Bundle extras = getIntent().getExtras();
-        userEmail = extras.getString("Email");
-        userFName = extras.getString("First Name");
-        userLname = extras.getString("Last Name");
-        userID = extras.getString("ID");
-        SESSION_ID = extras.getString("SessionKey");
+//        Bundle extras = getIntent().getExtras();
+//        userEmail = extras.getString("Email");
+//        userFName = extras.getString("First Name");
+//        userLname = extras.getString("Last Name");
+//        userID = extras.getString("ID");
+//        SESSION_ID = extras.getString("SessionKey");
+
+        gatherUserInfoFromSharedPreferences();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -330,6 +333,22 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
+    }
+
+    /**
+     * Method to get all userdata from SharedPreferences. This data is instantiated during the LoginActivity and is also referenced
+     * during the SplashScreen Activity
+     */
+    public void gatherUserInfoFromSharedPreferences() {
+        sharedPrefs = getSharedPreferences("MontePrefs",Context.MODE_PRIVATE);
+        userFName = sharedPrefs.getString("First Name", "Monte"); //SharedPreferences retrieval takes Key and DefaultValue as parameters
+        userLName = sharedPrefs.getString("Last Name", "Otter");
+        userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
+        userID = sharedPrefs.getString("ID", "12345");
+        Log.d("SharedPrefs", "!!!!email at MainActivity " + userEmail + " !!!!");
+        Log.d("SharedPrefs", "!!!!userID at MainActivity " + userID + " !!!!");
+        SESSION_ID = sharedPrefs.getString("SessionKey", "sessionkeyerror");
     }
 
 }

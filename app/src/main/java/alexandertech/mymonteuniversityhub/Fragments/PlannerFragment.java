@@ -1,6 +1,8 @@
 package alexandertech.mymonteuniversityhub.Fragments;
 
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
@@ -41,11 +43,14 @@ import alexandertech.mymonteuniversityhub.Classes.EventDecorator;
 import alexandertech.mymonteuniversityhub.Classes.Task;
 import alexandertech.mymonteuniversityhub.R;
 
+import static alexandertech.mymonteuniversityhub.Activities.MainActivity.MY_PREFS_NAME;
+
 public class PlannerFragment extends Fragment {
 
     private TaskAdapter taskAdapter;
     private CardView mCardView;
     private EventDecorator assignmentDot;
+    private SharedPreferences sharedPreferences;
     View v;
 
     @Nullable
@@ -125,10 +130,6 @@ public class PlannerFragment extends Fragment {
 
 
             //Dummy Data for tasks to display in the recycler view
-            //TODO: REPLACE WITH MONTEAPI LOGIC
-//            String urlParameters = "Task=newUser&FName=" + FName + "&LName="+ LName + "&remoteDBId="+remoteDbId+"&DeviceID=" + AndroidFCMID;
-//            URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php" + urlParameters);
-
 
             List<Task> tl = new ArrayList<>(); //Create a test List of Tasks
             Date d = new Date();
