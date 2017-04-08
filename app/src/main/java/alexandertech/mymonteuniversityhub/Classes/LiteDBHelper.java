@@ -191,7 +191,7 @@ public boolean logout(String SESSION) throws IOException {
      return false;
  }
  public void insertSessionIntoRemoteDB (String remoteDbId, String FName, String LName, String AndroidFCMID) throws IOException {
-     String urlParameters = "Task=newUser&FName=" + FName + "&LName="+ LName + "&remoteDBId="+remoteDbId+"&DeviceID=" + AndroidFCMID;
+     String urlParameters = "Task=newUser&FName=" +FName+ "&LName="+LName+"&remoteDBId="+remoteDbId+"&DeviceID="+AndroidFCMID;
      URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
 
      HttpURLConnection connection = null;
