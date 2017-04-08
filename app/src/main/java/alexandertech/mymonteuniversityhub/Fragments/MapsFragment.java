@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -144,6 +143,9 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
             mGoogleMap.addMarker(markerOptions);
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 18));
 
+//            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+//                    Uri.parse("http://maps.google.com/maps?saddr=36.653875,-121.801811&daddr=36.652414, -121.796707"));
+//            startActivity(intent);
         } else {
             Snackbar.make(getView(), "No saved Location", Snackbar.LENGTH_LONG).show();
         }
@@ -335,7 +337,6 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
     @Override
     public void onDestroy() {
         Log.d("MapsFragment", "Inside onDestroy");
-
         super.onDestroy();
         if (mMapView != null)
             mMapView.onDestroy();
@@ -344,7 +345,6 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
     @Override
     public void onStart() {
         Log.d("MapsFragment", "Inside onStart");
-
         super.onStart();
         mGoogleApiClient.connect();
     }
@@ -373,12 +373,12 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
 
     @Override
     public void onConnectionSuspended(int i) {
-
+        Snackbar.make(getView(), "Connection was suspended",Snackbar.LENGTH_LONG).show();
     }
 
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
+        Snackbar.make(getView(), "Connection failed, try again", Snackbar.LENGTH_LONG).show();
     }
 }
