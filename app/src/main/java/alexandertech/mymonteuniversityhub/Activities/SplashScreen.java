@@ -78,8 +78,7 @@ public class SplashScreen extends AppCompatActivity {
                 Intent SplashScreenRedirect = new Intent(SplashScreen.this, LoginActivity.class);
                 startActivity(SplashScreenRedirect);
             }
-
-
+            
             // close this activity
             finish();
 

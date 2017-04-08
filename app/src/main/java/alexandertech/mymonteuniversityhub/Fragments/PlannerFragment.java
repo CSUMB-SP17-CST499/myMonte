@@ -24,6 +24,8 @@ import android.view.ViewGroup;
 import android.support.annotation.Nullable;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
@@ -31,6 +33,8 @@ import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,12 +42,16 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import alexandertech.mymonteuniversityhub.Activities.MainActivity;
 import alexandertech.mymonteuniversityhub.Adapters.TaskAdapter;
 import alexandertech.mymonteuniversityhub.Classes.EventDecorator;
+import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.Classes.Task;
 import alexandertech.mymonteuniversityhub.R;
 
 import static alexandertech.mymonteuniversityhub.Activities.MainActivity.MY_PREFS_NAME;
+import static alexandertech.mymonteuniversityhub.Activities.MainActivity.sharedPrefs;
 
 public class PlannerFragment extends Fragment {
 
@@ -51,6 +59,14 @@ public class PlannerFragment extends Fragment {
     private CardView mCardView;
     private EventDecorator assignmentDot;
     private SharedPreferences sharedPreferences;
+    private MyFirebaseInstanceIdService firebaseInstance;
+    private LiteDBHelper liteDBHelper;
+    private String userEmail = "";
+    private String userFName = "";
+    private String userLName = "";
+    private String userID = "";
+    private List<Task> tasks;
+
     View v;
 
     @Nullable
@@ -65,7 +81,7 @@ public class PlannerFragment extends Fragment {
      * a Calendar and a TaskList. The calendar will show students at-a-glance info about upcoming events via a custom Dialog.
      * The TaskList will be a dynamic set of Cards filled with user-defined TODO items.
      */
-
+        firebaseInstance = new MyFirebaseInstanceIdService();
 
         // XML Layout is inflated for fragment_planner
         v = inflater.inflate(R.layout.fragment_planner, container, false);
@@ -131,14 +147,14 @@ public class PlannerFragment extends Fragment {
 
             //Dummy Data for tasks to display in the recycler view
 
-            List<Task> tl = new ArrayList<>(); //Create a test List of Tasks
-            Date d = new Date();
-            for(int i = 0; i < 10; i++)
-            {
-                Task t = new Task(" " + i, d);
-                tl.add(t);
-            }
-            taskAdapter = new TaskAdapter(tl);
+            tasks = new ArrayList<>(); //Create a test List of Tasks
+//            Date d = new Date();
+//            for(int i = 0; i < 10; i++)
+//            {
+//                Task t = new Task(" " + i, d);
+//                tasks.add(t);
+//            }
+            taskAdapter = new TaskAdapter(tasks);
             recList.setAdapter(taskAdapter);
 
         return v;
@@ -152,13 +168,39 @@ public class PlannerFragment extends Fragment {
 
     public void launchAddTaskDialog() {
         final BottomSheetDialog addTaskDialog = new BottomSheetDialog(getActivity());
-        View addTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_addtask, null);
+        final View addTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_addtask, null);
         addTaskDialog.setContentView(addTaskLayout);
         addTaskDialog.show();
 
         Button save = (Button) addTaskLayout.findViewById(R.id.btnSaveTask);
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                liteDBHelper = new LiteDBHelper(getContext());
+                sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
+                userFName = sharedPrefs.getString("First Name", "Monte"); //SharedPreferences retrieval takes Key and DefaultValue as parameters
+                userLName = sharedPrefs.getString("Last Name", "Otter");
+                userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
+                userID = sharedPrefs.getString("ID", "12345");
 
-        // 1. Send task to the database
-        // 2. Force RecyclerView to refresh
+                EditText taskEditText = (EditText) addTaskLayout.findViewById(R.id.addTaskContent);
+                String taskTitle = taskEditText.getText().toString();
+                Date testDate = new Date(2017,5,1);
+                String testDateString = testDate.toString();
+
+                try {
+                    liteDBHelper.insertTask(taskTitle, userID, testDateString, firebaseInstance.getFirebaseAndroidID());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                Task t = new Task(taskTitle, testDate);
+                tasks.add(t);
+            }
+        });
+
+
+
     }
 }

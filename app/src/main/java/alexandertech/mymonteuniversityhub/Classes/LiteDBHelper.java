@@ -14,6 +14,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -206,6 +207,24 @@ public boolean logout(String SESSION){
  }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
+    }
+
+
+    public void insertTask(String task_title, String mdl_db_id, String due_date, String android_reg_token) throws IOException {
+        String urlParameters = "task_title=" + task_title + "&mdl_db_id="
+                + mdl_db_id + "&due_date=" + due_date + "&android_reg_token=";
+
+        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/ToDoList.php?insertItem=true&" + urlParameters);
+
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("GET");
+        connection.connect();
+        System.out.println(connection.getResponseCode());
 
     }
 }
