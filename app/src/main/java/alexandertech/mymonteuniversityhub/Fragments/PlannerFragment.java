@@ -2,9 +2,13 @@ package alexandertech.mymonteuniversityhub.Fragments;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,18 +21,32 @@ import android.view.ViewGroup;
  */
 import android.support.annotation.Nullable;
 import android.widget.Button;
+import android.widget.CalendarView;
+import android.widget.Toast;
 
+import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.CalendarMode;
+import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
+import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import alexandertech.mymonteuniversityhub.Adapters.TaskAdapter;
+import alexandertech.mymonteuniversityhub.Classes.EventDecorator;
 import alexandertech.mymonteuniversityhub.Classes.Task;
 import alexandertech.mymonteuniversityhub.R;
 
 public class PlannerFragment extends Fragment {
 
     private TaskAdapter taskAdapter;
+    private CardView mCardView;
+    private EventDecorator assignmentDot;
+    View v;
 
     @Nullable
     @Override
@@ -45,7 +63,37 @@ public class PlannerFragment extends Fragment {
 
 
         // XML Layout is inflated for fragment_planner
-        View v = inflater.inflate(R.layout.fragment_planner, container, false);
+        v = inflater.inflate(R.layout.fragment_planner, container, false);
+        View taskview = inflater.inflate(R.layout.tasklist, container, false);
+
+        //Set Up CalendarView
+        MaterialCalendarView calendarView = (MaterialCalendarView) v.findViewById(R.id.calendarView);
+
+
+        //debug
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, -2);
+
+        ArrayList<CalendarDay> dates = new ArrayList<>();
+        for (int i = 0; i < 30; i++) {
+            CalendarDay day = CalendarDay.from(calendar);
+            dates.add(day);
+            calendar.add(Calendar.DATE, 5);
+        }
+
+        assignmentDot = new EventDecorator(R.color.csumb_blue, dates);
+        calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
+            @Override
+            public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
+                //TODO: Ask the MonteApi to return the relevant assignments for the selected date
+            }
+        });
+
+        calendarView.setTopbarVisible(false);
+        calendarView.state().edit()
+                .setCalendarDisplayMode(CalendarMode.MONTHS)
+                .commit();
+        calendarView.addDecorator(assignmentDot);
 
         //Instantiate FAB
         FloatingActionButton addTaskFab = (FloatingActionButton) v.findViewById(R.id.fab);
@@ -55,6 +103,11 @@ public class PlannerFragment extends Fragment {
                 launchAddTaskDialog();
             }
         });
+
+        //Setup CardView Behavior
+        mCardView = (CardView) taskview.findViewById(R.id.taskCard);
+        //TODO: Setup custom onclicklistener for touch and delete
+
 
         /*
          * Before we return the inflated view, we will instantiate a RecyclerView object and reference the xml element.
@@ -72,6 +125,11 @@ public class PlannerFragment extends Fragment {
 
 
             //Dummy Data for tasks to display in the recycler view
+            //TODO: REPLACE WITH MONTEAPI LOGIC
+//            String urlParameters = "Task=newUser&FName=" + FName + "&LName="+ LName + "&remoteDBId="+remoteDbId+"&DeviceID=" + AndroidFCMID;
+//            URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php" + urlParameters);
+
+
             List<Task> tl = new ArrayList<>(); //Create a test List of Tasks
             Date d = new Date();
             for(int i = 0; i < 10; i++)
