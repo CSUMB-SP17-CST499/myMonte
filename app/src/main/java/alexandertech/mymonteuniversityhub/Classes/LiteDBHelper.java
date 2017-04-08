@@ -14,7 +14,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -212,11 +211,14 @@ public boolean logout(String SESSION){
 
 
     public void insertTask(String task_title, String mdl_db_id, String due_date, String android_reg_token) throws IOException {
-        String urlParameters = "task_title=" + task_title + "&mdl_db_id="
-                + mdl_db_id + "&due_date=" + due_date + "&android_reg_token=";
-
-        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/ToDoList.php?insertItem=true&" + urlParameters);
-
+        System.out.println("tASK:" + task_title);
+        System.out.println("DB ID :" + mdl_db_id);
+        System.out.println("Due Date:" + due_date);
+        System.out.println("Android Token" + android_reg_token);
+        String urlParameters = "task_title=" + task_title + "&mdl_db_id=" + mdl_db_id + "&due_date=" + due_date + "&android_reg_token=" + android_reg_token;
+        //URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&" + urlParameters);
+        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&mdl_db_id="+mdl_db_id+ "&due_date=5-6-94" + "&task_title=" +task_title+ "&android_reg_token=" +android_reg_token);
+        System.out.println(url.toString());
         HttpURLConnection connection = null;
         connection = (HttpURLConnection) url.openConnection();
         connection.setDoInput(true);

@@ -5,10 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.SwipeDismissBehavior;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,17 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-
-/**
- * A simple {@link Fragment} subclass.
- */
-import android.support.annotation.Nullable;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -34,15 +24,12 @@ import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
-import alexandertech.mymonteuniversityhub.Activities.MainActivity;
 import alexandertech.mymonteuniversityhub.Adapters.TaskAdapter;
 import alexandertech.mymonteuniversityhub.Classes.EventDecorator;
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
@@ -50,8 +37,11 @@ import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.Classes.Task;
 import alexandertech.mymonteuniversityhub.R;
 
-import static alexandertech.mymonteuniversityhub.Activities.MainActivity.MY_PREFS_NAME;
 import static alexandertech.mymonteuniversityhub.Activities.MainActivity.sharedPrefs;
+
+/**
+ * A simple {@link Fragment} subclass.
+ */
 
 public class PlannerFragment extends Fragment {
 
@@ -183,20 +173,27 @@ public class PlannerFragment extends Fragment {
                 userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
                 userID = sharedPrefs.getString("ID", "12345");
 
+
                 EditText taskEditText = (EditText) addTaskLayout.findViewById(R.id.addTaskContent);
-                String taskTitle = taskEditText.getText().toString();
-                Date testDate = new Date(2017,5,1);
-                String testDateString = testDate.toString();
-
-                try {
-                    liteDBHelper.insertTask(taskTitle, userID, testDateString, firebaseInstance.getFirebaseAndroidID());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-
+                final String taskTitle = taskEditText.getText().toString();
+                Date testDate = new Date(2017, 5, 1);
+                final String testDateString = testDate.toString();
+                final Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            liteDBHelper.insertTask(taskTitle, userID, testDateString, firebaseInstance.getFirebaseAndroidID());
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                thread.start();
                 Task t = new Task(taskTitle, testDate);
                 tasks.add(t);
+                addTaskDialog.closeOptionsMenu();
             }
         });
 
