@@ -37,10 +37,11 @@ public class SplashScreen extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... arg0) {
             final LiteDBHelper status = new LiteDBHelper(getApplicationContext());
-            final boolean isLoggedInFromLite = status.getUserLoginStatus();
+            //final boolean isLoggedInFromLite = status.getUserLoginStatus();
             final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
             boolean isLoggedInFromRemote = false;
             try {
+                System.out.println(firebaseID.getFirebaseAndroidID());
                 isLoggedInFromRemote = status.checkRemoteSession(firebaseID.getFirebaseAndroidID());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -52,7 +53,7 @@ public class SplashScreen extends AppCompatActivity {
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
-            if (isLoggedInFromLite && isLoggedInFromRemote){
+            if (isLoggedInFromRemote){
                 return true;
             }
             else{

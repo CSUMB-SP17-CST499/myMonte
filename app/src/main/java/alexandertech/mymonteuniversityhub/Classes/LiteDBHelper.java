@@ -128,10 +128,10 @@ public boolean getUserLoginStatus(){
     //Session is now invalid
     
     //method to log the user out. 
-public boolean logout(String SESSION){
-    Boolean isDeleted = false;
+public boolean logout(String SESSION) throws IOException {
+    Boolean isDeleted;
     SQLiteDatabase myDB = this.getWritableDatabase();
-    String statement = "DELETE FROM ActiveSessions WHERE SessionKey = '"+SESSION+"';";
+    String statement = "DELETE FROM ActiveSessions";
     myDB.execSQL(statement);
     String CheckDelete = "SELECT * FROM ActiveSessions";
     Cursor cursor = myDB.rawQuery(CheckDelete, null);
@@ -146,7 +146,7 @@ public boolean logout(String SESSION){
 
  public void clearSessionFromRemoteDB(String ID) throws IOException {
      String urlParameters = "Task=clearSession&remoteDbId=" +ID;
-     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
+     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?Task=clearSession" + urlParameters);
      HttpURLConnection connection = null;
      connection = (HttpURLConnection) url.openConnection();
      connection.setDoInput(true);

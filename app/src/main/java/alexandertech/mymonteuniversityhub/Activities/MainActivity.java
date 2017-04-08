@@ -290,32 +290,35 @@ public class MainActivity extends AppCompatActivity
             startActivity(i);
         }else if (id == R.id.logout){
             final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
-            if(dbFlush.logout(SESSION_ID)) {
-
-                final Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            dbFlush.clearSessionFromRemoteDB(userID);
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+            try {
+                if(dbFlush.logout(SESSION_ID)) {
+                    final Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                dbFlush.clearSessionFromRemoteDB(userID);
+                            } catch (MalformedURLException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                            Intent redirectToSpalsh = new Intent(MainActivity.this, SplashScreen.class);
+                            redirectToSpalsh.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            finish();
+                            startActivity(redirectToSpalsh);
                         }
-                        Intent redirectToLogin = new Intent(MainActivity.this, LoginActivity.class);
-                        redirectToLogin.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        finish();
-                        startActivity(redirectToLogin);
-                    }
-                });
-                thread.start();
+                    });
+                    thread.start();
 
-                finish();
-            }
-            else {
-                Snackbar.make(findViewById(android.R.id.content), "There was an error, please uninstall the app to clear  the account!" , Snackbar.LENGTH_LONG)
-                        .setActionTextColor(Color.RED)
-                        .show();
+                    finish();
+                }
+                else {
+                    Snackbar.make(findViewById(android.R.id.content), "There was an error, please uninstall the app to clear  the account!" , Snackbar.LENGTH_LONG)
+                            .setActionTextColor(Color.RED)
+                            .show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
 
         } else if (id == R.id.close) {
