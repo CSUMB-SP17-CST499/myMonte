@@ -177,7 +177,9 @@ public class PlannerFragment extends Fragment {
                 EditText taskEditText = (EditText) addTaskLayout.findViewById(R.id.addTaskContent);
                 final String taskTitle = taskEditText.getText().toString();
                 Date testDate = new Date(2017, 5, 1);
-                final String testDateString = testDate.toString();
+                testDate.getTime();
+
+                final String testDateString = Long.toString(testDate.getTime());
                 final Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    public static final String MY_PREFS_NAME = "MyPrefsFile";
+    public static final String MY_PREFS_NAME = "MontePrefs";
     public static SharedPreferences sharedPrefs;
     public static SharedPreferences.Editor prefs;
     private TabLayout tabLayout;
@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private String[] pageTitle = {"myPlanner", "News", "Parking"};
     private String studyRooms = "http://library2.csumb.edu/mrbs/mobilenow.php";
-    public static String MYPREFERENCE = "myPref";
     private String food = "https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
     private String userEmail = "";
     private String userFName = "";
@@ -75,18 +74,8 @@ public class MainActivity extends AppCompatActivity
 
         sharedPrefs = getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
         prefs = sharedPrefs.edit();
-
-
-
-//        Bundle extras = getIntent().getExtras();
-//        userEmail = extras.getString("Email");
-//        userFName = extras.getString("First Name");
-//        userLname = extras.getString("Last Name");
-//        userID = extras.getString("ID");
-//        SESSION_ID = extras.getString("SessionKey");
-
         gatherUserInfoFromSharedPreferences();
-
+        prefs.apply();
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

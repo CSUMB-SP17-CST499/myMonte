@@ -22,10 +22,19 @@
         android:textAllCaps="false" />
 
     <Button
-        android:text="Button"
+        android:text="Due Date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/btnDueDate"
+        android:drawableLeft="@drawable/ic_date_range_black_24dp"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog" />
+
+    <Button
+        android:text="Time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDueTime"
+        android:src="@drawable/ic_access_time_black_24dp"
         style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog" />
 
     <Button
