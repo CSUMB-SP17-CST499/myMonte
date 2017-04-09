@@ -4,6 +4,10 @@
         android:id="@+id/DinningCommonsItem"
         android:icon="@mipmap/ic_restaurant_black_24dp"
         android:title="@string/dinning_commons" />
+    <item
+        android:id="@+id/wowMenu"
+        android:icon="@mipmap/ic_restaurant_black_24dp"
+        android:title="Wow Menu" />
 
     <item
         android:id="@+id/LibraryStudyRooms"

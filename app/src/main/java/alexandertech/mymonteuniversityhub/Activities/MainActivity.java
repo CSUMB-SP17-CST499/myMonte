@@ -270,6 +270,11 @@ public class MainActivity extends AppCompatActivity
             finish();
 
         }
+        else if (id == R.id.wowMenu){
+            Uri uri = Uri.parse("https://drive.google.com/viewerng/viewer?embedded=true&url=www.wowcafe.com/menus/monterey_bay_9.7.16.pdf");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        }
         else if (id == R.id.close) {
             finish();
         }
