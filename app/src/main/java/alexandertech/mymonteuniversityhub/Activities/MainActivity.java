@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.Fragments.MapsFragment;
 import alexandertech.mymonteuniversityhub.Fragments.NewsFragment;
 import alexandertech.mymonteuniversityhub.Fragments.PlannerFragment;
@@ -76,7 +77,7 @@ public class MainActivity extends AppCompatActivity
         prefs = sharedPrefs.edit();
         gatherUserInfoFromSharedPreferences();
         prefs.apply();
-
+        System.out.println("User ID: " + userID);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -247,36 +248,26 @@ public class MainActivity extends AppCompatActivity
 
         }else if (id == R.id.logout){
             final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
-            try {
-                if(dbFlush.logout(SESSION_ID)) {
-                    final Thread thread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                dbFlush.clearSessionFromRemoteDB(userID);
-                            } catch (MalformedURLException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                            Intent redirectToSpalsh = new Intent(MainActivity.this, SplashScreen.class);
-                            redirectToSpalsh.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            finish();
-                            startActivity(redirectToSpalsh);
-                        }
-                    });
-                    thread.start();
-
+            final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
+            final Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        dbFlush.clearSessionFromRemoteDB(firebaseID.getFirebaseAndroidID());
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    Intent redirectToSpalsh = new Intent(MainActivity.this, LoginActivity.class);
+                    redirectToSpalsh.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     finish();
+                    startActivity(redirectToSpalsh);
                 }
-                else {
-                    Snackbar.make(findViewById(android.R.id.content), "There was an error, please uninstall the app to clear  the account!" , Snackbar.LENGTH_LONG)
-                            .setActionTextColor(Color.RED)
-                            .show();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            });
+            thread.start();
+
+            finish();
 
         }
         else if (id == R.id.close) {

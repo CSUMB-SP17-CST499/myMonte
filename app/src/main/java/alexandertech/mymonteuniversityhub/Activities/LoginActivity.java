@@ -472,7 +472,6 @@ public String  lastName ="";
                     public void run() {
                         try {
                             StoreUser.insertSessionIntoRemoteDB(userID, firstName, lastName, firebaseID.getFirebaseAndroidID());
-
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         } catch (IOException e) {

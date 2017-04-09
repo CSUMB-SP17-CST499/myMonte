@@ -145,8 +145,9 @@ public boolean logout(String SESSION) throws IOException {
 }
 
  public void clearSessionFromRemoteDB(String ID) throws IOException {
-     String urlParameters = "Task=clearSession&remoteDbId=" +ID;
-     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?Task=clearSession" + urlParameters);
+     String urlParameters = "Task=clearSession&DeviceID="+ID;
+     URL url = new URL("https://monteapp.me/moodle/monteapi/authn/sessionInsert.php?" + urlParameters);
+     System.out.println(url.toString());
      HttpURLConnection connection = null;
      connection = (HttpURLConnection) url.openConnection();
      connection.setDoInput(true);
