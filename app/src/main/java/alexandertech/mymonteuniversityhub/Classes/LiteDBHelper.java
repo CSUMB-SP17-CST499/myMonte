@@ -65,7 +65,6 @@ public boolean getUserLoginStatus(){
     Cursor cursor = myDB.rawQuery(CheckIfSessionExists, null);
 
     if (cursor.moveToFirst()) {
-
         session = true;
     } else {
         session = false;
