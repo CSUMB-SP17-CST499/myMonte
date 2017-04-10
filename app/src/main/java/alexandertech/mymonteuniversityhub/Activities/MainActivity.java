@@ -245,6 +245,29 @@ public class MainActivity extends AppCompatActivity
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
 
+        }else if (id == R.id.reportIssue){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("Report an Issue");
+            WebView wv = new WebView(this);
+            WebSettings webSettings = wv.getSettings();
+            webSettings.setJavaScriptEnabled(true);
+            wv.setWebViewClient(new WebViewClient() {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    view.loadUrl(url);
+                    return true;
+                }
+            });
+
+            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
+
+
 
         }else if (id == R.id.logout){
             final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());

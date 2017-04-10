@@ -28,6 +28,10 @@
         android:id="@+id/CampusPD"
         android:icon="@mipmap/ic_phone_in_talk_black_24dp"
         android:title="Campus PD" />
+    <item
+        android:id="@+id/reportIssue"
+        android:icon="@android:drawable/ic_dialog_alert"
+        android:title="Report an issue!" />
 
     <item
         android:id="@+id/logout"
