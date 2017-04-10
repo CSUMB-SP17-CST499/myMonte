@@ -215,9 +215,7 @@ public boolean logout(String SESSION) throws IOException {
         System.out.println("DB ID :" + mdl_db_id);
         System.out.println("Due Date:" + due_date);
         System.out.println("Android Token" + android_reg_token);
-        String urlParameters = "task_title=" + task_title + "&mdl_db_id=" + mdl_db_id + "&due_date=" + due_date + "&android_reg_token=" + android_reg_token;
-        //URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&" + urlParameters);
-        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&mdl_db_id="+mdl_db_id+ "&due_date=5-6-94" + "&task_title=" +task_title+ "&android_reg_token=" +android_reg_token);
+        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&mdl_db_id="+mdl_db_id+ "&due_date=" + due_date + "&task_title=" +task_title+ "&android_reg_token=" +android_reg_token);
         System.out.println(url.toString());
         HttpURLConnection connection = null;
         connection = (HttpURLConnection) url.openConnection();

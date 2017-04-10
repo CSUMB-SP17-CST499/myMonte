@@ -16,6 +16,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -129,7 +132,7 @@ public class PlannerFragment extends Fragment {
         mCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                launchViewTaskDialog();
             }
         });
 
@@ -181,9 +184,35 @@ public class PlannerFragment extends Fragment {
         Toast.makeText(getContext(), todayDate.toString(), Toast.LENGTH_LONG);
         final Calendar selectedDate = Calendar.getInstance(); //Initialize to today's date
 
-        Button btnSave = (Button) addTaskLayout.findViewById(R.id.btnSaveTask);
+        final Button btnSave = (Button) addTaskLayout.findViewById(R.id.btnSaveTask);
         ImageButton btnDueDate = (ImageButton) addTaskLayout.findViewById(R.id.btnDueDate);
         ImageButton btnDueTime = (ImageButton) addTaskLayout.findViewById(R.id.btnDueTime);
+        final EditText taskEditText = (EditText) addTaskLayout.findViewById(R.id.addTaskContent);
+
+        //Start Handle Disable Empty Task Uploads
+        btnSave.setEnabled(false);
+        taskEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().trim().length() > 0)
+                {
+                    Toast.makeText(getContext(), "FOO", Toast.LENGTH_LONG).show();
+                    btnSave.setEnabled(true);
+                }
+            }
+        });
+        //End Handle Disable Empty Task Uploads
+
 
         btnDueDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,7 +263,6 @@ public class PlannerFragment extends Fragment {
                 userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
                 userID = sharedPrefs.getString("ID", "12345");
 
-                EditText taskEditText = (EditText) addTaskLayout.findViewById(R.id.addTaskContent);
                 final String taskTitle = taskEditText.getText().toString();
                 final String selectedDateString = Long.toString(selectedDate.getTime().getTime()); //gotta convert from cal to date to Unixtime
                 SimpleDateFormat prettyDueDate = new SimpleDateFormat("MMM d, h:mm a");
@@ -243,6 +271,7 @@ public class PlannerFragment extends Fragment {
                     public void run() {
                         try {
                             liteDBHelper.insertTask(taskTitle, userID, selectedDateString, firebaseInstance.getFirebaseAndroidID());
+                            Log.d("Timestamp Accuracy", selectedDateString);
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -260,8 +289,13 @@ public class PlannerFragment extends Fragment {
                 Snackbar.make(getView(), "Saved \"" + taskTitle + "\" for " + prettyDueDate.format(selectedDate.getTime()), Snackbar.LENGTH_LONG).show();
             }
         });
+    }
 
-
+    public void launchViewTaskDialog() {
+        final BottomSheetDialog viewTaskDialog = new BottomSheetDialog(getActivity());
+        final View viewTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_addtask, null); //re-using this layout, tweaking into a View-Only version
+        viewTaskDialog.setContentView(viewTaskLayout);
+        viewTaskDialog.show();
 
     }
 }
