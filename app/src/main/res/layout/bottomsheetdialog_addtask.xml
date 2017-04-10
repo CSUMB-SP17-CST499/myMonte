@@ -1,47 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:radius="5dp"
+    android:layout_margin="20dp"
+    android:padding="5dp"
+    >
 
     <TextView
+        android:id="@+id/addTaskPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/addTaskPrompt"
-        android:text="What do you need to do?"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textStyle="normal|bold" />
+        android:layout_alignEnd="@+id/btnDueTime"
+        android:layout_alignParentStart="true"
+        android:text="@string/what_do_you_need_to_do"
+        android:textAlignment="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/addTaskPrompt"
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/addTaskContent"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:text="asdf"
-        android:textAllCaps="false" />
+        android:textAllCaps="false"
+        android:layout_alignParentStart="true"
+        android:imeOptions="actionDone"/>
 
-    <Button
-        android:text="Due Date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
+    <ImageButton
         android:id="@+id/btnDueDate"
-        android:drawableLeft="@drawable/ic_date_range_black_24dp"
-        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog" />
-
-    <Button
-        android:text="Time"
-        android:layout_width="match_parent"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_below="@id/addTaskContent"
+        android:contentDescription="@string/due_date"
+        android:src="@drawable/ic_date_range_black_24dp"
+        android:text="@string/due_date" />
+
+    <ImageButton
         android:id="@+id/btnDueTime"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_below="@+id/addTaskContent"
+        android:layout_marginEnd="13dp"
+        android:contentDescription="@string/due_time"
         android:src="@drawable/ic_access_time_black_24dp"
-        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog" />
+        android:layout_toEndOf="@+id/btnDueDate" />
+
+    <TextView
+        android:id="@+id/dueDateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/btnDueDate"
+        android:layout_toStartOf="@+id/btnDueTime"
+        android:text="@string/due_date"
+        android:textAlignment="center"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/dueTimeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/btnDueTime"
+        android:layout_below="@+id/btnDueTime"
+        android:layout_toEndOf="@+id/btnDueDate"
+        android:text="@string/due_time"
+        android:textAlignment="center"
+        android:textStyle="bold" />
+
+
 
     <Button
         android:id="@+id/btnSaveTask"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="@string/save"
+        android:layout_below="@+id/dueDateText"
+        android:layout_marginTop="21dp"
+        android:layout_alignParentStart="true" />
 
-</LinearLayout>
+</RelativeLayout>

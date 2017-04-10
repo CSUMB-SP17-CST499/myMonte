@@ -1,13 +1,17 @@
 package alexandertech.mymonteuniversityhub.Fragments;
 
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,8 +19,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -25,6 +35,7 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -40,7 +51,12 @@ import alexandertech.mymonteuniversityhub.R;
 import static alexandertech.mymonteuniversityhub.Activities.MainActivity.sharedPrefs;
 
 /**
- * A simple {@link Fragment} subclass.
+ * Title: PlannerFragment
+ * Authors: Joseph Molina, Anthony Symkowick
+ * Date: 2/17/2017
+ * Description: This file instantiates and connects the objects necessary for the PlannerFragment activity, including
+ * a Calendar and a TaskList. The calendar will show students at-a-glance info about upcoming events via a custom Dialog.
+ * The TaskList will be a dynamic set of Cards filled with user-defined TODO items.
  */
 
 public class PlannerFragment extends Fragment {
@@ -63,14 +79,6 @@ public class PlannerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-    /**
-     * Title: PlannerFragment
-     * Authors: Joseph Molina, Anthony Symkowick
-     * Date: 2/17/2017
-     * Description: This file instantiates and connects the objects necessary for the PlannerFragment activity, including
-     * a Calendar and a TaskList. The calendar will show students at-a-glance info about upcoming events via a custom Dialog.
-     * The TaskList will be a dynamic set of Cards filled with user-defined TODO items.
-     */
         firebaseInstance = new MyFirebaseInstanceIdService();
 
         // XML Layout is inflated for fragment_planner
@@ -118,7 +126,12 @@ public class PlannerFragment extends Fragment {
         //Setup CardView Behavior
         mCardView = (CardView) taskview.findViewById(R.id.taskCard);
         //TODO: Setup custom onclicklistener for touch and delete
+        mCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+            }
+        });
 
         /*
          * Before we return the inflated view, we will instantiate a RecyclerView object and reference the xml element.
@@ -134,7 +147,6 @@ public class PlannerFragment extends Fragment {
             llm.setOrientation(LinearLayoutManager.VERTICAL);
             recList.setLayoutManager(llm);
 
-
             //Dummy Data for tasks to display in the recycler view
 
             tasks = new ArrayList<>(); //Create a test List of Tasks
@@ -146,6 +158,9 @@ public class PlannerFragment extends Fragment {
 //            }
             taskAdapter = new TaskAdapter(tasks);
             recList.setAdapter(taskAdapter);
+
+        //This helps the BottomSheetDialog handle keyboard input without hiding the Date & Time Buttons
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         return v;
 
@@ -162,8 +177,54 @@ public class PlannerFragment extends Fragment {
         addTaskDialog.setContentView(addTaskLayout);
         addTaskDialog.show();
 
-        Button save = (Button) addTaskLayout.findViewById(R.id.btnSaveTask);
-        save.setOnClickListener(new View.OnClickListener() {
+        final Calendar todayDate = Calendar.getInstance();
+        Toast.makeText(getContext(), todayDate.toString(), Toast.LENGTH_LONG);
+        final Calendar selectedDate = Calendar.getInstance(); //Initialize to today's date
+
+        Button btnSave = (Button) addTaskLayout.findViewById(R.id.btnSaveTask);
+        ImageButton btnDueDate = (ImageButton) addTaskLayout.findViewById(R.id.btnDueDate);
+        ImageButton btnDueTime = (ImageButton) addTaskLayout.findViewById(R.id.btnDueTime);
+
+        btnDueDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        selectedDate.set(year, month, dayOfMonth);
+                        TextView dueDateText = (TextView) addTaskLayout.findViewById(R.id.dueDateText);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE, MMM d");
+
+                        dueDateText.setText(simpleDateFormat.format(selectedDate.getTime()));
+                    }
+                }, todayDate.get(Calendar.YEAR), todayDate.get(Calendar.MONTH), todayDate.get(Calendar.DAY_OF_MONTH));
+
+                datePickerDialog.show();
+            }
+        });
+
+
+        btnDueTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        selectedDate.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        selectedDate.set(Calendar.MINUTE, minute);
+                        TextView dueTimeText = (TextView) addTaskLayout.findViewById(R.id.dueTimeText);
+                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("h:mm a");
+
+                        dueTimeText.setText(simpleDateFormat.format(selectedDate.getTime()));
+                    }
+                }, todayDate.get(Calendar.HOUR_OF_DAY), todayDate.get(Calendar.MINUTE), false);
+
+                timePickerDialog.show();
+            }
+        });
+
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 liteDBHelper = new LiteDBHelper(getContext());
@@ -173,18 +234,15 @@ public class PlannerFragment extends Fragment {
                 userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
                 userID = sharedPrefs.getString("ID", "12345");
 
-
                 EditText taskEditText = (EditText) addTaskLayout.findViewById(R.id.addTaskContent);
                 final String taskTitle = taskEditText.getText().toString();
-                Date testDate = new Date(2017, 5, 1);
-                testDate.getTime();
-
-                final String testDateString = Long.toString(testDate.getTime());
+                final String selectedDateString = Long.toString(selectedDate.getTime().getTime()); //gotta convert from cal to date to Unixtime
+                SimpleDateFormat prettyDueDate = new SimpleDateFormat("MMM d, h:mm a");
                 final Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            liteDBHelper.insertTask(taskTitle, userID, testDateString, firebaseInstance.getFirebaseAndroidID());
+                            liteDBHelper.insertTask(taskTitle, userID, selectedDateString, firebaseInstance.getFirebaseAndroidID());
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
@@ -193,9 +251,13 @@ public class PlannerFragment extends Fragment {
                     }
                 });
                 thread.start();
-                Task t = new Task(taskTitle, testDate);
+
+                Task t = new Task(taskTitle, selectedDate);
                 tasks.add(t);
+                taskAdapter.notifyDataSetChanged();
                 addTaskDialog.closeOptionsMenu();
+                addTaskDialog.hide();
+                Snackbar.make(getView(), "Saved \"" + taskTitle + "\" for " + prettyDueDate.format(selectedDate.getTime()), Snackbar.LENGTH_LONG).show();
             }
         });
 
