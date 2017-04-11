@@ -251,10 +251,11 @@ public class MainActivity extends AppCompatActivity
             WebView wv = new WebView(this);
             WebSettings webSettings = wv.getSettings();
             webSettings.setJavaScriptEnabled(true);
+            wv.loadUrl("https://goo.gl/forms/XbTC9yK5eF423Vto1");
             wv.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl("https://goo.gl/forms/v1h1NAOgK4tXSPmm2");
+                    view.loadUrl(url);
                     return true;
                 }
             });
