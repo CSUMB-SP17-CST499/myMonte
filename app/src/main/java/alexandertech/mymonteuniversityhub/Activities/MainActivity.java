@@ -254,7 +254,7 @@ public class MainActivity extends AppCompatActivity
             wv.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl(url);
+                    view.loadUrl("https://goo.gl/forms/v1h1NAOgK4tXSPmm2");
                     return true;
                 }
             });

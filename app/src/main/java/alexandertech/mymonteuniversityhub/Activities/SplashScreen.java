@@ -16,24 +16,19 @@ import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.R;
 
 public class SplashScreen extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
         new CheckLoginStatus().execute();
     }
-
     private class CheckLoginStatus extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             // before making db calls
-
         }
-
         @Override
         protected Boolean doInBackground(Void... arg0) {
             final LiteDBHelper status = new LiteDBHelper(getApplicationContext());
@@ -58,13 +53,9 @@ public class SplashScreen extends AppCompatActivity {
             }
             else{
                 return false;
-
             }
             //returning false because perm login has NOT been set up therefor the isSessionvalid function in onPostExecute will not return true and show mainact.
-
-
         }
-
         @Override
         protected void onPostExecute(final Boolean isSessionValid) {
             LiteDBHelper status = new LiteDBHelper(getApplicationContext());
@@ -79,13 +70,9 @@ public class SplashScreen extends AppCompatActivity {
                 Intent SplashScreenRedirect = new Intent(SplashScreen.this, LoginActivity.class);
                 startActivity(SplashScreenRedirect);
             }
-            
             // close this activity
             finish();
-
-
         }
-
         /**
          * Method to place all userdata into the SharedPreferences (must do this here in Splash to ensure SharedPrefs up-to-date
          * @param status
@@ -100,9 +87,6 @@ public class SplashScreen extends AppCompatActivity {
             prefEditor.putString("SessionKey", status.getSessionKey());
             prefEditor.apply();
         }
-
-
-
     }
 }
 

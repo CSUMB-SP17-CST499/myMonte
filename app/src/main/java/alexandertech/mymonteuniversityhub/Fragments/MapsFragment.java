@@ -69,7 +69,6 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflator.inflate(R.layout.fragment_maps, container, false);
         ButterKnife.bind(this, view);
         mMapView = (MapView) view.findViewById(R.id.mapview);
