@@ -4,19 +4,26 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Objects;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Created by JAlexander on 3/30/2017.
@@ -226,6 +233,66 @@ public boolean logout(String SESSION) throws IOException {
         connection.connect();
         System.out.println(connection.getResponseCode());
 
+    }
+
+    public JSONArray getTasksFromServer(String mdl_db_id) throws IOException {
+        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?SendItemsToDevice&mdl_db_id=" + mdl_db_id);
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("GET");
+        connection.connect();
+
+        //omg i can't believe we need this ugly-ass code to parse an HTTP response
+        InputStream is = connection.getInputStream();
+        StringBuffer sb = new StringBuffer();
+        String tasks = "";
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String inputLine = "";
+        while ((inputLine = br.readLine()) != null) {
+            sb.append(inputLine);
+        }
+        tasks = sb.toString(); //ta-da, it's a string now
+
+        //Let's parse JSON into a usable array
+
+        try {
+            Log.d("TaskString", tasks);
+            String JsonString = "[" + tasks + "]";
+            JSONArray initialArray = new JSONArray(JsonString);
+            Log.d("fuck", Integer.toString(initialArray.length()));
+
+            String step1="";
+            JSONArray finalArray = null;
+            String title="test";
+            for(int i = 0; i < initialArray.length(); i++)
+            {
+                step1 = initialArray.getJSONObject(i).getString("Tasks");
+                String step2 = "[" + step1 + "]";
+                finalArray = new JSONArray(step2);
+                title = finalArray.getJSONObject(i).getString("task_title");
+                Log.d("AMERICA", title);
+                System.out.println("*************" + title);
+                //Log.d("fuck", step2);
+            }
+
+
+
+
+
+
+
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Log.d("Tasks from Server", tasks);
+        JSONArray error = null;
+        return error;
     }
 }
 

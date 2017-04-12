@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +19,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -36,12 +36,14 @@ import com.prolificinteractive.materialcalendarview.CalendarMode;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import alexandertech.mymonteuniversityhub.Adapters.TaskAdapter;
@@ -90,8 +92,6 @@ public class PlannerFragment extends Fragment {
 
         //Set Up CalendarView
         MaterialCalendarView calendarView = (MaterialCalendarView) v.findViewById(R.id.calendarView);
-
-
         //debug
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, -2);
@@ -102,7 +102,6 @@ public class PlannerFragment extends Fragment {
             dates.add(day);
             calendar.add(Calendar.DATE, 5);
         }
-
         assignmentDot = new EventDecorator(R.color.csumb_blue, dates);
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
@@ -111,9 +110,8 @@ public class PlannerFragment extends Fragment {
             }
         });
 
-        calendarView.setTopbarVisible(false);
         calendarView.state().edit()
-                .setCalendarDisplayMode(CalendarMode.MONTHS)
+                .setCalendarDisplayMode(CalendarMode.WEEKS)
                 .commit();
         calendarView.addDecorator(assignmentDot);
 
@@ -126,15 +124,7 @@ public class PlannerFragment extends Fragment {
             }
         });
 
-        //Setup CardView Behavior
-        mCardView = (CardView) taskview.findViewById(R.id.taskCard);
-        //TODO: Setup custom onclicklistener for touch and delete
-        mCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                launchViewTaskDialog();
-            }
-        });
+
 
         /*
          * Before we return the inflated view, we will instantiate a RecyclerView object and reference the xml element.
@@ -144,29 +134,42 @@ public class PlannerFragment extends Fragment {
          */
 
         RecyclerView recList = (RecyclerView) v.findViewById(R.id.cardList); // Connect RecyclerView (cardList) and set its layout manager
+        recList.setHasFixedSize(true);
+        recList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
+            @Override
+            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+                return false;
+            }
 
-            recList.setHasFixedSize(true);
-            LinearLayoutManager llm = new LinearLayoutManager(getContext());
-            llm.setOrientation(LinearLayoutManager.VERTICAL);
-            recList.setLayoutManager(llm);
+            @Override
+            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+                launchViewTaskDialog();
+            }
 
-            //Dummy Data for tasks to display in the recycler view
+            @Override
+            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-            tasks = new ArrayList<>(); //Create a test List of Tasks
-//            Date d = new Date();
-//            for(int i = 0; i < 10; i++)
-//            {
-//                Task t = new Task(" " + i, d);
-//                tasks.add(t);
-//            }
-            taskAdapter = new TaskAdapter(tasks);
-            recList.setAdapter(taskAdapter);
+            }
+        });
+        LinearLayoutManager llm = new LinearLayoutManager(getContext());
+        llm.setOrientation(LinearLayoutManager.VERTICAL);
+        recList.setLayoutManager(llm);
+        tasks = new ArrayList<>(); //Initialize ArrayList of Tasks
+        taskAdapter = new TaskAdapter(tasks); //Connect ArrayList to the Adapter
+        recList.setAdapter(taskAdapter); //Connect RecyclerView to the Adapter
+        //So, it goes RecyclerView -> Adapter <- TaskArrayList :)
+
+        //Check the server for Tasks
+        try {
+            requestTasksFromServer();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //This helps the BottomSheetDialog handle keyboard input without hiding the Date & Time Buttons
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         return v;
-
     }
 
     @Override
@@ -206,7 +209,6 @@ public class PlannerFragment extends Fragment {
             public void afterTextChanged(Editable s) {
                 if(s.toString().trim().length() > 0)
                 {
-                    Toast.makeText(getContext(), "FOO", Toast.LENGTH_LONG).show();
                     btnSave.setEnabled(true);
                 }
             }
@@ -292,10 +294,30 @@ public class PlannerFragment extends Fragment {
     }
 
     public void launchViewTaskDialog() {
+        //TODO: Reformat this layout to show Task info and allow deletion/completion
         final BottomSheetDialog viewTaskDialog = new BottomSheetDialog(getActivity());
         final View viewTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_addtask, null); //re-using this layout, tweaking into a View-Only version
         viewTaskDialog.setContentView(viewTaskLayout);
         viewTaskDialog.show();
+    }
 
+    public void requestTasksFromServer() throws IOException {
+        final LiteDBHelper liteDBHelper = new LiteDBHelper(getContext());
+        sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
+        userID = sharedPrefs.getString("ID", "12345");
+
+        final Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    JSONArray dataFromServerUgly  = liteDBHelper.getTasksFromServer(userID);
+                    //Log.d("Server Tasks: " , dataFromServerUgly.toString());
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
     }
 }
