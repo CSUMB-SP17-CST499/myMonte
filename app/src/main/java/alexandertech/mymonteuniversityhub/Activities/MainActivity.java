@@ -276,6 +276,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(i);
 
         }else if (id == R.id.reportIssue){
+
             if(hasInternetConnection()){
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle("Report an Issue");
@@ -290,6 +291,13 @@ public class MainActivity extends AppCompatActivity
                         return true;
                     }
                 });
+            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                }
+            });
+            alert.show();
 
                 alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
                     @Override
