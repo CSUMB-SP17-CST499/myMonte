@@ -37,6 +37,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity
             R.mipmap.ic_directions_car_black_24dp
     };
     NetworkInfo networkInfo;
+    HashMap<String, String> buildingMap = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +83,7 @@ public class MainActivity extends AppCompatActivity
         gatherUserInfoFromSharedPreferences();
         prefs.apply();
         System.out.println("User ID: " + userID);
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -105,15 +108,27 @@ public class MainActivity extends AppCompatActivity
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(1);
-        //setting the initial welcome message from when the user logs in
-        Snackbar.make(findViewById(android.R.id.content), "Welcome, " + userFName + "!", Snackbar.LENGTH_LONG)
+        Snackbar.make(findViewById(android.R.id.content),
+                "Welcome, " + userFName + "!", Snackbar.LENGTH_LONG)
                 .setActionTextColor(Color.BLUE)
                 .show();
         //setting Tab layout (number of Tabs = number of ViewPager pages)
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
+        setUpBuildingMap();
+    }
+    public void setUpBuildingMap(){
+        buildingMap.put("Administration Building(1)","36.653364, -121.798278");
+        buildingMap.put("Alumni and Visitors Center(97)","36.654635, -121.801792");
+        buildingMap.put("Aquatic Center(100)","36.651590, -121.807439");
+        buildingMap.put("Asilomar Hall(203)","36.653273, -121.796321");
+        buildingMap.put("Avocet Hall(208)","36.653490, -121.799627");
+        buildingMap.put("Beach Hall(21)","36.652818, -121.799203");
+
 
     }
+
+
     class PagerAdapter extends FragmentPagerAdapter{
 
         String tabTitles[] = new String[]{"myPlanner", "News", "Parking"};
@@ -217,7 +232,11 @@ public class MainActivity extends AppCompatActivity
                     }
                 });
                 alert.show();
+            }else{
+                displaySnackbar();
+
             }
+
         } else if (id == R.id.LibraryStudyRooms) {
             if(hasInternetConnection()){
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -309,7 +328,8 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.wowMenu){
             if(hasInternetConnection()){
-                Uri uri = Uri.parse("https://drive.google.com/viewerng/viewer?embedded=true&url=www.wowcafe.com/menus/monterey_bay_9.7.16.pdf");
+                Uri uri = Uri.parse("https://drive.google.com/viewerng/viewer?" +
+                        "embedded=true&url=www.wowcafe.com/menus/monterey_bay_9.7.16.pdf");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }else{
@@ -341,7 +361,9 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 if(!mSpinner.getSelectedItem().toString().equalsIgnoreCase("Please choose a building…")){
-                    Toast.makeText(MainActivity.this, "Works", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+             Uri.parse("http://maps.google.com/maps?daddr=" + buildingMap.get(mSpinner.getSelectedItem().toString())));
+            startActivity(intent);
                     dialog.dismiss();
                 }
             }
