@@ -17,9 +17,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -235,7 +238,7 @@ public boolean logout(String SESSION) throws IOException {
 
     }
 
-    public JSONArray getTasksFromServer(String mdl_db_id) throws IOException {
+    public ArrayList<Task> getTasksFromServer(String mdl_db_id) throws IOException {
         URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?SendItemsToDevice&mdl_db_id=" + mdl_db_id);
         HttpURLConnection connection = null;
         connection = (HttpURLConnection) url.openConnection();
@@ -256,43 +259,52 @@ public boolean logout(String SESSION) throws IOException {
         }
         tasks = sb.toString(); //ta-da, it's a string now
 
-        //Let's parse JSON into a usable array
+        //Let's parse JSON into a usable arraylist!
+        ArrayList<Task> tasksFromServer = new ArrayList<>(); //Construct a list to hold the soon-to-be extracted tasks
 
+
+        //Ok, this is a bit of a process
         try {
             Log.d("TaskString", tasks);
-            String JsonString = "[" + tasks + "]";
-            JSONArray initialArray = new JSONArray(JsonString);
-            Log.d("fuck", Integer.toString(initialArray.length()));
 
-            String step1="";
+            //We're gonna need two rounds of JSON parsing -
+            String JsonString = "[" + tasks + "]";
+            JSONArray initialArray = new JSONArray(JsonString); // - once to get rid of the extra data sent in the HTTP request (200 OK, etc) -
+            String step1=""; //(we'll store that string here)
+
+            // - and a second time to get the individual objects out of the step1 string (our desired JSON from server, without the extra junk
             JSONArray finalArray = null;
-            String title="test";
+
+            String title= ""; //Store the title from JSON
+            int id = 666; //Store the id from JSON
+            Calendar dueDate = Calendar.getInstance(); //Store the due date from JSON
+
             for(int i = 0; i < initialArray.length(); i++)
             {
                 step1 = initialArray.getJSONObject(i).getString("Tasks");
-                String step2 = "[" + step1 + "]";
+                String step2 =  step1; //had [ ] here before
                 finalArray = new JSONArray(step2);
-                title = finalArray.getJSONObject(i).getString("task_title");
-                Log.d("AMERICA", title);
-                System.out.println("*************" + title);
-                //Log.d("fuck", step2);
+
+                //Log.d("haha", finalArray.getJSONObject(0).getString("task_title"), new Exception());
+
+                for ( int j = 0; j <finalArray.length();  j++)
+                {
+                    title = finalArray.getJSONObject(j).getString("task_title"); //Set title = the string returned by server
+                    id =  Integer.parseInt(finalArray.getJSONObject(j).getString("ID")); //Parse the integer for id from the string returned by server
+                    dueDate.setTimeInMillis((1000L * Long.parseLong(finalArray.getJSONObject(j).getString("due_date"))));//Set the calendar date to time in milliseconds from string in SECONDS from server (gotta multiply * 1000 to get millis)
+
+                    Task temp = new Task(title, dueDate, id); //Construct a temp task for each iteration
+                    tasksFromServer.add(temp); //Store each task in the list we created above                                  ^^^
+                }
+
+                Log.d("fuck", tasksFromServer.toString());
             }
-
-
-
-
-
-
-
-
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        //Log.d("Tasks from Server", tasks);
-        JSONArray error = null;
-        return error;
+        return tasksFromServer;
     }
 }
 

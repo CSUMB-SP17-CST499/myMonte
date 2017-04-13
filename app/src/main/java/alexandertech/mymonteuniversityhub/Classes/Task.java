@@ -11,6 +11,7 @@ import java.util.Date;
 public class Task {
     protected String name;
     protected Calendar dueDate;
+    protected int id;
     private String course; // TODO: Replace this with a course class later
 
     public Task(String name) {
@@ -20,6 +21,13 @@ public class Task {
     public Task(String name, Calendar dueDate) {
         this.name = name;
         this.dueDate = dueDate;
+        this.id = 666;
+    }
+
+    public Task(String name, Calendar dueDate, int id) {
+        this.name = name;
+        this.dueDate = dueDate;
+        this.id = id;
     }
 
     public String getName() {
@@ -45,5 +53,13 @@ public class Task {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

@@ -40,11 +40,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.RunnableFuture;
 
 import alexandertech.mymonteuniversityhub.Adapters.TaskAdapter;
 import alexandertech.mymonteuniversityhub.Classes.EventDecorator;
@@ -154,17 +159,23 @@ public class PlannerFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
-        tasks = new ArrayList<>(); //Initialize ArrayList of Tasks
+
+        /**
+         * TaskList Sync
+         */
+
+        try {
+            tasks = requestTasksFromServer(); //Initialize TaskList with tasks from server
+        } catch (Exception e) {
+            tasks = new ArrayList<>(); //Make a brand new empty list if not found on server
+            e.printStackTrace();
+        }
+
         taskAdapter = new TaskAdapter(tasks); //Connect ArrayList to the Adapter
         recList.setAdapter(taskAdapter); //Connect RecyclerView to the Adapter
         //So, it goes RecyclerView -> Adapter <- TaskArrayList :)
 
-        //Check the server for Tasks
-        try {
-            requestTasksFromServer();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
 
         //This helps the BottomSheetDialog handle keyboard input without hiding the Date & Time Buttons
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -301,23 +312,22 @@ public class PlannerFragment extends Fragment {
         viewTaskDialog.show();
     }
 
-    public void requestTasksFromServer() throws IOException {
+    public ArrayList<Task> requestTasksFromServer() throws IOException,ExecutionException,InterruptedException {
         final LiteDBHelper liteDBHelper = new LiteDBHelper(getContext());
         sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
         userID = sharedPrefs.getString("ID", "12345");
+        ArrayList<Task> result;
 
-        final Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    JSONArray dataFromServerUgly  = liteDBHelper.getTasksFromServer(userID);
-                    //Log.d("Server Tasks: " , dataFromServerUgly.toString());
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        //RunnableFuture allows arraylist to be populated in a separate thread, and then returned
+        RunnableFuture f = new FutureTask(new Callable() {
+            public ArrayList<Task> call() throws IOException{
+                ArrayList<Task> t = liteDBHelper.getTasksFromServer(userID);
+                return t;
             }
         });
-        thread.start();
+
+        new Thread(f).start();
+        result = (ArrayList) f.get();
+        return result;
     }
 }
