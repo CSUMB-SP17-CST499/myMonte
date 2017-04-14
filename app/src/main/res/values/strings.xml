@@ -3,7 +3,7 @@
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="dinning_commons">Dinning Commons</string>
-    <string name="library_study_room_reservation">Library Study Room Reservation</string>
+    <string name="CampusNews">Campus News</string>
 
     <string-array name="my_items">
         <item>Dummy Item 1</item>
@@ -49,7 +49,7 @@
 
 
     <string-array name="buildings">
-        <item>Please choose a buiding…</item>
+        <item>Please choose a building…</item>
         <item>Administration Building(1)</item>
         <item>Alumni and Visitors Center(97)</item>
         <item>Aquatic Center(100)</item>
@@ -127,5 +127,7 @@
         <item>World Languages and Cultures-South (48)</item>
         <item>World Theater (28)</item>
         <item>Yarrow Hall (206)</item>
+
+
     </string-array>
 </resources>

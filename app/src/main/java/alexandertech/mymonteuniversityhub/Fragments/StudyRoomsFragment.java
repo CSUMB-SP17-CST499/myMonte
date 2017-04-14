@@ -12,19 +12,19 @@ import android.webkit.WebViewClient;
 
 import alexandertech.mymonteuniversityhub.R;
 
-public class NewsFragment extends Fragment {
+public class StudyRoomsFragment extends Fragment {
 private WebView webView;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_listview, container, false);
     }
-private String newsPage = "https://csumb.edu/news";
+    private String studyRoomPage = "http://library2.csumb.edu/mrbs/mobilenow.php";
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
         super.onViewCreated(view, savedInstanceState);
-        webView = (WebView) getView().findViewById(R.id.news_WebView);
+        webView = (WebView) getView().findViewById(R.id.studyRoom_WebView);
         loadWebViewLoad(webView);
     }
     private void loadWebViewLoad(WebView webview) {
@@ -33,6 +33,6 @@ private String newsPage = "https://csumb.edu/news";
         webview.getSettings().setSupportMultipleWindows(true);
         webview.setWebViewClient(new WebViewClient());
         webview.setWebChromeClient(new WebChromeClient());
-        webview.loadUrl(newsPage);
+        webview.loadUrl(studyRoomPage);
     }
 }

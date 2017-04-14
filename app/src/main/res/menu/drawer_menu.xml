@@ -10,9 +10,9 @@
         android:title="Wow Menu" />
 
     <item
-        android:id="@+id/LibraryStudyRooms"
+        android:id="@+id/CampusNews"
         android:icon="@mipmap/ic_local_library_black_24dp"
-        android:title="@string/library_study_room_reservation" />
+        android:title="@string/CampusNews" />
 
     <item
         android:id="@+id/grades"

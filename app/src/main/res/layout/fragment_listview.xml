@@ -6,8 +6,8 @@
     android:weightSum="1">
 
     <WebView
-        android:layout_height="match_parent"
-        android:id="@+id/news_WebView"
-        android:layout_width="match_parent" />
+        android:id="@+id/studyRoom_WebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>
