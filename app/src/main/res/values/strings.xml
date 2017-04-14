@@ -3,7 +3,7 @@
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="dinning_commons">Dinning Commons</string>
-    <string name="library_study_room_reservation">Library Study Room Reservation</string>
+    <string name="CampusNews">Campus News</string>
 
     <string-array name="my_items">
         <item>Dummy Item 1</item>

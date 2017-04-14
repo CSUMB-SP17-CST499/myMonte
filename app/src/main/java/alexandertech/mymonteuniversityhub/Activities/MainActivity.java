@@ -39,8 +39,8 @@ import java.net.MalformedURLException;
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.Fragments.MapsFragment;
-import alexandertech.mymonteuniversityhub.Fragments.NewsFragment;
 import alexandertech.mymonteuniversityhub.Fragments.PlannerFragment;
+import alexandertech.mymonteuniversityhub.Fragments.StudyRoomsFragment;
 import alexandertech.mymonteuniversityhub.R;
 
 public class MainActivity extends AppCompatActivity
@@ -54,8 +54,9 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
     private DrawerLayout drawerLayout;
-    private String[] pageTitle = {"myPlanner", "News", "Parking"};
-    private String studyRooms = "http://library2.csumb.edu/mrbs/mobilenow.php";
+    private String[] pageTitle = {"myPlanner", "Study Rooms", "Parking"};
+    private String newsPage = "https://csumb.edu/news";
+    private String reportIssue = "https://docs.google.com/forms/d/e/1FAIpQLSczSktOIv7Dusil6OiikwsOMhM1Yq3oWjwIoFBU3YQnOR0bwg/viewform?usp=sf_link";
     private String food = "https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
     private String userEmail = "";
     private String userFName = "";
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity
     }
     class PagerAdapter extends FragmentPagerAdapter{
 
-        String tabTitles[] = new String[]{"myPlanner", "News", "Parking"};
+        String tabTitles[] = new String[]{"myPlanner", "Study Rooms", "Parking"};
         public Fragment[] fragments = new Fragment[tabTitles.length];
         Context context;
 
@@ -133,7 +134,7 @@ public class MainActivity extends AppCompatActivity
                 case 0:
                     return new PlannerFragment();
                 case 1:
-                    return new NewsFragment();
+                    return new StudyRoomsFragment();
                 case 2:
                     return new MapsFragment();
             }
@@ -212,14 +213,14 @@ public class MainActivity extends AppCompatActivity
             });
             alert.show();
 
-        } else if (id == R.id.LibraryStudyRooms) {
+        } else if (id == R.id.CampusNews) {
 
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Study room reserve");
+            alert.setTitle("Campus News");
             WebView wv = new WebView(this);
             WebSettings webSettings = wv.getSettings();
             webSettings.setJavaScriptEnabled(true);
-            wv.loadUrl(studyRooms);
+            wv.loadUrl(newsPage);
             wv.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -251,7 +252,7 @@ public class MainActivity extends AppCompatActivity
             WebView wv = new WebView(this);
             WebSettings webSettings = wv.getSettings();
             webSettings.setJavaScriptEnabled(true);
-            wv.loadUrl("https://goo.gl/forms/XbTC9yK5eF423Vto1");
+            wv.loadUrl(reportIssue);
             wv.setWebViewClient(new WebViewClient() {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
