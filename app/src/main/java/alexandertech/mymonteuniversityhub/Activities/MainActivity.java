@@ -153,7 +153,6 @@ public class MainActivity extends AppCompatActivity
             fragments[position] = createdFragment;
             return createdFragment;
         }
-
     }
     /*
     Method for the navigation Drawer that takes in the id from the navigation drawer
