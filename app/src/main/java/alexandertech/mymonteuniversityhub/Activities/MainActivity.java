@@ -33,7 +33,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -206,7 +205,6 @@ public class MainActivity extends AppCompatActivity
             }else{
                 displaySnackbar();
             }
-        }
 
         if (id == R.id.DinningCommonsItem) {
             if(hasInternetConnection()){
@@ -270,7 +268,7 @@ public class MainActivity extends AppCompatActivity
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
 
-        }else if (id == R.id.reportIssue){
+        }else if (id == R.id.reportIssue) {
             AlertDialog.Builder alert = new AlertDialog.Builder(this);
             alert.setTitle("Report an Issue");
             WebView wv = new WebView(this);
@@ -284,7 +282,7 @@ public class MainActivity extends AppCompatActivity
                     return true;
                 }
             });
-
+        }
             if(hasInternetConnection()){
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle("Report an Issue");
