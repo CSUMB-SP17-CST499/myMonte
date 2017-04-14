@@ -243,8 +243,8 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
         Log.d("MapsFragment", "Inside onMapReady");
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-        LatLng csumb = new LatLng(36.653875,-121.801811);
-        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(csumb,18));
+        LatLng csumb = new LatLng(36.653758, -121.798056);
+        mGoogleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(csumb,17));
     }
 
     public void getUserLocation(){
