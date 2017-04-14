@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,6 +37,7 @@ import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashMap;
 
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
@@ -68,6 +71,10 @@ public class MainActivity extends AppCompatActivity
             R.mipmap.ic_school_black_24dp,
             R.mipmap.ic_directions_car_black_24dp
     };
+
+
+    NetworkInfo networkInfo;
+    HashMap<String, String> buildingMap = new HashMap<String, String>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +119,22 @@ public class MainActivity extends AppCompatActivity
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
     }
+
+
+
+
+
+    public void setUpBuildingMap(){
+        buildingMap.put("Administration Building(1)","36.653364, -121.798278");
+        buildingMap.put("Alumni and Visitors Center(97)","36.654635, -121.801792");
+        buildingMap.put("Aquatic Center(100)","36.651590, -121.807439");
+        buildingMap.put("Asilomar Hall(203)","36.653273, -121.796321");
+        buildingMap.put("Avocet Hall(208)","36.653490, -121.799627");
+        buildingMap.put("Beach Hall(21)","36.652818, -121.799203");
+
+
+    }
+
     class PagerAdapter extends FragmentPagerAdapter{
 
         String tabTitles[] = new String[]{"myPlanner", "Study Rooms", "Parking"};
@@ -164,138 +187,158 @@ public class MainActivity extends AppCompatActivity
         final int id = item.getItemId();
 
         if (id == R.id.grades){
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            WebView wv = new WebView(this);
-            //url for the web api to get the users grades.
-            wv.loadUrl("https://monteapp.me/moodle/monteapi/getGrades.php?id="+userID);
-            wv.setWebViewClient(new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl(url);
-                    return true;
-                }
-            });
+            if(hasInternetConnection()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                WebView wv = new WebView(this);
+                //url for the web api to get the users grades.
+                wv.loadUrl("https://monteapp.me/moodle/monteapi/getGrades.php?id=" + userID);
+                wv.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+                        return true;
+                    }
+                });
 
-            alert.setView(wv);
-            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-            alert.show();
+                alert.setView(wv);
+                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+            }else{
+                displaySnackbar();
+            }
         }
 
         if (id == R.id.DinningCommonsItem) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("DC Food");
-            WebView wv = new WebView(this);
-            WebSettings webSettings = wv.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            wv.loadUrl("https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%" +
-                    "20bay%20dining%20common%20-%20resident%20dining");
-            wv.setWebViewClient(new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl(url);
+            if (hasInternetConnection()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("DC Food");
+                WebView wv = new WebView(this);
+                WebSettings webSettings = wv.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                wv.loadUrl("https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%" +
+                        "20bay%20dining%20common%20-%20resident%20dining");
+                wv.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
 
-                    return true;
-                }
-            });
+                        return true;
+                    }
+                });
 
-            alert.setView(wv);
-            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-            alert.show();
+                alert.setView(wv);
+                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+            }else{
+                displaySnackbar();
+            }
 
         } else if (id == R.id.CampusNews) {
-
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Campus News");
-            WebView wv = new WebView(this);
-            WebSettings webSettings = wv.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            wv.loadUrl(newsPage);
-            wv.setWebViewClient(new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl(url);
-                    return true;
-                }
-            });
-            alert.setView(wv);
-            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-            alert.show();
-
+            if (hasInternetConnection()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                WebView wv = new WebView(this);
+                WebSettings webSettings = wv.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                wv.loadUrl(newsPage);
+                wv.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+                        return true;
+                    }
+                });
+                alert.setView(wv);
+                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+            }else{
+                displaySnackbar();
+            }
         } else if (id == R.id.MapYourRoute) {
             onMapYourRoute();
 
         } else if (id == R.id.CampusPD) {
-
             Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "18316550268"));
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-
         }else if (id == R.id.reportIssue){
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Report an Issue");
-            WebView wv = new WebView(this);
-            WebSettings webSettings = wv.getSettings();
-            webSettings.setJavaScriptEnabled(true);
-            wv.loadUrl(reportIssue);
-            wv.setWebViewClient(new WebViewClient() {
-                @Override
-                public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    view.loadUrl(url);
-                    return true;
-                }
-            });
-            alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
-                }
-            });
-            alert.show();
-
-
-        }else if (id == R.id.logout){
-            final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
-            final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
-            final Thread thread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        dbFlush.clearSessionFromRemoteDB(firebaseID.getFirebaseAndroidID());
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            if (hasInternetConnection()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setTitle("Report an Issue");
+                WebView wv = new WebView(this);
+                WebSettings webSettings = wv.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                wv.loadUrl(reportIssue);
+                wv.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+                        return true;
                     }
-                    Intent redirectToSpalsh = new Intent(MainActivity.this, LoginActivity.class);
-                    redirectToSpalsh.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    finish();
-                    startActivity(redirectToSpalsh);
-                }
-            });
-            thread.start();
+                });
+                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+            }
+            else{
+                displaySnackbar();
+            }
 
-            finish();
+        }else if (id == R.id.logout) {
+            if (hasInternetConnection()) {
+                final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
+                final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
+                final Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            dbFlush.clearSessionFromRemoteDB(firebaseID.getFirebaseAndroidID());
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        Intent redirectToSpalsh = new Intent(MainActivity.this, LoginActivity.class);
+                        redirectToSpalsh.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        finish();
+                        startActivity(redirectToSpalsh);
+                    }
+                });
+                thread.start();
 
-        }
-        else if (id == R.id.wowMenu){
-            Uri uri = Uri.parse("https://drive.google.com/viewerng/viewer?embedded=true&url=www.wowcafe.com/menus/monterey_bay_9.7.16.pdf");
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+                finish();
+            }else{
+                displaySnackbar();
+            }
+            }
+
+        else if (id == R.id.wowMenu) {
+            if (hasInternetConnection()) {
+                Uri uri = Uri.parse("https://drive.google.com/viewerng/viewer?embedded=true&url=www.wowcafe.com/menus/monterey_bay_9.7.16.pdf");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+            else{
+                displaySnackbar();
+            }
         }
         else if (id == R.id.close) {
             finish();
@@ -361,6 +404,20 @@ public class MainActivity extends AppCompatActivity
         Log.d("SharedPrefs", "!!!!email at MainActivity " + userEmail + " !!!!");
         Log.d("SharedPrefs", "!!!!userID at MainActivity " + userID + " !!!!");
         SESSION_ID = sharedPrefs.getString("SessionKey", "sessionkeyerror");
+    }
+    public boolean hasInternetConnection(){
+
+        ConnectivityManager connectivityManager = (ConnectivityManager)
+                getApplicationContext().getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null && networkInfo.isConnected();
+
+    }
+
+    public void displaySnackbar(){
+        Snackbar.make(findViewById(android.R.id.content),
+                "No internet connection",
+                Snackbar.LENGTH_LONG).show();
     }
 
 }
