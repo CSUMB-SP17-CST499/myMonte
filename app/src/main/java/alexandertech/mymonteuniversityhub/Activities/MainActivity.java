@@ -269,7 +269,6 @@ public class MainActivity extends AppCompatActivity
             alert.show();
 
 
-
         }else if (id == R.id.logout){
             final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
             final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
