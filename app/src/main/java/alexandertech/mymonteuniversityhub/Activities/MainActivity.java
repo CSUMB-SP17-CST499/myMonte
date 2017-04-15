@@ -59,8 +59,11 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawerLayout;
     private String[] pageTitle = {"myPlanner", "Study Rooms", "Parking"};
     private String newsPage = "https://csumb.edu/news";
-    private String reportIssue = "https://docs.google.com/forms/d/e/1FAIpQLSczSktOIv7Dusil6OiikwsOMhM1Yq3oWjwIoFBU3YQnOR0bwg/viewform?usp=sf_link";
-    private String food = "https://csumb.sodexomyway.com/smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
+    private String reportIssue = "https://docs.google.com" +
+            "/forms/d/e/1FAIpQLSczSktOIv7Dusil6OiikwsOMhM1Yq3" +
+            "oWjwIoFBU3YQnOR0bwg/viewform?usp=sf_link";
+    private String food = "https://csumb.sodexomyway.com/" +
+            "smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
     private String userEmail = "";
     private String userFName = "";
     private String userLName = "";
@@ -72,7 +75,6 @@ public class MainActivity extends AppCompatActivity
             R.mipmap.ic_directions_car_black_24dp
     };
 
-
     NetworkInfo networkInfo;
     HashMap<String, String> buildingMap = new HashMap<String, String>();
 
@@ -81,12 +83,21 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        setUpPrefs();
+        setUpNavigationDrawer();
+        setUpTabViewPager();
+        showWelcomeMessage();
+    }
+
+    public void setUpPrefs(){
         sharedPrefs = getSharedPreferences(MY_PREFS_NAME,Context.MODE_PRIVATE);
         prefs = sharedPrefs.edit();
         gatherUserInfoFromSharedPreferences();
         prefs.apply();
         System.out.println("User ID: " + userID);
+    }
 
+    public void setUpNavigationDrawer(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setSupportActionBar(toolbar);
@@ -95,6 +106,9 @@ public class MainActivity extends AppCompatActivity
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+    }
+
+    public void setUpTabViewPager(){
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         for (int i = 0; i < 3; i++) {
@@ -110,18 +124,19 @@ public class MainActivity extends AppCompatActivity
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(1);
-        //setting the initial welcome message from when the user logs in
-        Snackbar.make(findViewById(android.R.id.content), "Welcome, " + userFName + "!", Snackbar.LENGTH_LONG)
-                .setActionTextColor(Color.BLUE)
-                .show();
+
         //setting Tab layout (number of Tabs = number of ViewPager pages)
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
 
     }
 
-
-
+    public void showWelcomeMessage(){
+        Snackbar.make(findViewById(android.R.id.content), "Welcome, "
+                + userFName + "!", Snackbar.LENGTH_LONG)
+                .setActionTextColor(Color.BLUE)
+                .show();
+    }
 
 
     public void setUpBuildingMap(){
@@ -332,7 +347,8 @@ public class MainActivity extends AppCompatActivity
 
         else if (id == R.id.wowMenu) {
             if (hasInternetConnection()) {
-                Uri uri = Uri.parse("https://drive.google.com/viewerng/viewer?embedded=true&url=www.wowcafe.com/menus/monterey_bay_9.7.16.pdf");
+                Uri uri = Uri.parse("https://drive.google.com/viewerng/viewer" +
+                        "?embedded=true&url=www.wowcafe.com/menus/monterey_bay_9.7.16.pdf");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }
@@ -363,7 +379,7 @@ public class MainActivity extends AppCompatActivity
         mBuilder.setPositiveButton("Get Directions", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(!mSpinner.getSelectedItem().toString().equalsIgnoreCase("Please choose a buiding…")){
+                if(!mSpinner.getSelectedItem().toString().equalsIgnoreCase("Please choose a building…")){
                     Toast.makeText(MainActivity.this, "Works", Toast.LENGTH_SHORT).show();
                     dialog.dismiss();
                 }
@@ -392,12 +408,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Method to get all userdata from SharedPreferences. This data is instantiated during the LoginActivity and is also referenced
+     * Method to get all userdata from SharedPreferences.
+     * This data is instantiated during the LoginActivity and is also referenced
      * during the SplashScreen Activity
      */
     public void gatherUserInfoFromSharedPreferences() {
         sharedPrefs = getSharedPreferences("MontePrefs",Context.MODE_PRIVATE);
-        userFName = sharedPrefs.getString("First Name", "Monte"); //SharedPreferences retrieval takes Key and DefaultValue as parameters
+        userFName = sharedPrefs.getString("First Name", "Monte");
+        //SharedPreferences retrieval takes Key and DefaultValue as parameters
         userLName = sharedPrefs.getString("Last Name", "Otter");
         userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
         userID = sharedPrefs.getString("ID", "12345");
