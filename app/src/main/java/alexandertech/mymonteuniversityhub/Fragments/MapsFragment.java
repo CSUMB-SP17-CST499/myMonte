@@ -3,10 +3,12 @@ package alexandertech.mymonteuniversityhub.Fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -62,9 +65,10 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
     private Location mLastLocation;
     private MapView mMapView;
     LatLng currentParkingLocation;
-    @BindView(R.id.showDirection) FloatingActionButton showDirectionFAB;
+    @BindView(R.id.showParkingSpot) FloatingActionButton showParkingSpotFAB;
     @BindView(R.id.saveFAB)FloatingActionButton saveFAB;
     @BindView(R.id.GPSFAB)FloatingActionButton GPSFAB;
+    @BindView(R.id.giveDirectionsFAB) FloatingActionButton giveDirectionsFAB;
 
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
@@ -83,6 +87,23 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
                     .build();
         }
         return view;
+    }
+
+    @OnClick(R.id.giveDirectionsFAB)
+    public void onDirectionsFAB(){
+        if(sharedPrefs.contains("location")){
+            String[] locationArray = sharedPrefs.getString("location", "").split(",");
+            Double retrievedLat = Double.parseDouble(locationArray[0]);
+            Double retrievedLong = Double.parseDouble(locationArray[1]);
+            Toast.makeText(getActivity(), retrievedLat + " and "
+                    + retrievedLong, Toast.LENGTH_SHORT).show();
+
+            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                   Uri.parse("http://maps.google.com/maps?daddr=" + retrievedLat.toString() + "," +
+                           retrievedLong.toString()));
+           startActivity(intent);
+
+        }
     }
 
     @OnClick(R.id.saveFAB)
@@ -124,8 +145,8 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
         }
     }
 
-    @OnClick(R.id.showDirection)
-    public void onShowDirection(){
+    @OnClick(R.id.showParkingSpot)
+    public void onShowParkingSpot(){
         if (sharedPrefs.contains("location")) {
             String[] locationArray = sharedPrefs.getString("location", "").split(",");
             Double retrievedLat = Double.parseDouble(locationArray[0]);
@@ -134,7 +155,6 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
                     + retrievedLong, Toast.LENGTH_SHORT).show();
 
             LatLng latlng = new LatLng(retrievedLat, retrievedLong);
-            // locationList.add(1,latlng);//adding parking location
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latlng);
             markerOptions.title("Last Parked Position");
