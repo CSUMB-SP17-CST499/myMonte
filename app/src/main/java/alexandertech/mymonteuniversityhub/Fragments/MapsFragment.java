@@ -21,7 +21,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -63,19 +62,19 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
     private static final int REQUEST_CHECK_SETTINGS = 2;
     private Location mLastLocation;
-    private MapView mMapView;
+
     LatLng currentParkingLocation;
     @BindView(R.id.showParkingSpot) FloatingActionButton showParkingSpotFAB;
     @BindView(R.id.saveFAB)FloatingActionButton saveFAB;
     @BindView(R.id.GPSFAB)FloatingActionButton GPSFAB;
     @BindView(R.id.giveDirectionsFAB) FloatingActionButton giveDirectionsFAB;
+    @BindView(R.id.mapview) MapView mMapView;
 
     @Override
     public View onCreateView(LayoutInflater inflator, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflator.inflate(R.layout.fragment_maps, container, false);
         ButterKnife.bind(this, view);
-        mMapView = (MapView) view.findViewById(R.id.mapview);
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(this);
         Log.d("OnCreate", "Inside onCreate");
@@ -102,7 +101,8 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
                    Uri.parse("http://maps.google.com/maps?daddr=" + retrievedLat.toString() + "," +
                            retrievedLong.toString()));
            startActivity(intent);
-
+        }else {
+            Snackbar.make(getView(), "No saved Location", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -162,9 +162,6 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
             mGoogleMap.addMarker(markerOptions);
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 18));
 
-//            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-//                    Uri.parse("http://maps.google.com/maps?saddr=36.653875,-121.801811&daddr=36.652414, -121.796707"));
-//            startActivity(intent);
         } else {
             Snackbar.make(getView(), "No saved Location", Snackbar.LENGTH_LONG).show();
         }
