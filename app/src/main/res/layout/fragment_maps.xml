@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/GPSFAB"
@@ -41,15 +41,25 @@
             app:useCompatPadding="true" />
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/showDirection"
+            android:id="@+id/showParkingSpot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"
-            android:src="@mipmap/ic_directions_black_24dp"
+            android:src="@mipmap/ic_directions_car_black_24dp"
             app:backgroundTint="#FFFFFF"
             app:layout_anchor="@id/saveFAB"
             app:layout_anchorGravity="top"
             app:useCompatPadding="true" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/giveDirectionsFAB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:src="@mipmap/ic_directions_black_24dp"
+            app:useCompatPadding="true">
+
+        </android.support.design.widget.FloatingActionButton>
 
 
     </LinearLayout>
