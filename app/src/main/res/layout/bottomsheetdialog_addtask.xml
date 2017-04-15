@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addTaskPrompt"
+        android:text="What do you need to do?"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+        android:textStyle="normal|bold" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/addTaskContent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:text="asdf"
+        android:textAllCaps="false" />
+
+    <Button
+        android:text="Due Date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDueDate"
+        android:drawableLeft="@drawable/ic_date_range_black_24dp"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog" />
+
+    <Button
+        android:text="Time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDueTime"
+        android:src="@drawable/ic_access_time_black_24dp"
+        style="@style/Widget.AppCompat.Button.ButtonBar.AlertDialog" />
+
+    <Button
+        android:id="@+id/btnSaveTask"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+</LinearLayout>

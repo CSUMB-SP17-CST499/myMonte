@@ -22,7 +22,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -50,6 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.R;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -458,10 +458,30 @@ public String  lastName ="";
             if (success) {
                 Intent mainActivity  = new Intent(LoginActivity.this, MainActivity.class);
                 putUserDataIntoSharedPreferences();
-
                 startActivity(mainActivity);
-                LiteDBHelper StoreUser = new LiteDBHelper(getApplicationContext());
+
+
+                final LiteDBHelper StoreUser = new LiteDBHelper(getApplicationContext());
                 StoreUser.storeAccount(firstName, lastName, emailAdd, sessionKey, userID);
+
+                final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
+
+
+                final Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            StoreUser.insertSessionIntoRemoteDB(userID, firstName, lastName, firebaseID.getFirebaseAndroidID());
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
+                thread.start();
+
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
@@ -474,19 +494,17 @@ public String  lastName ="";
             mAuthTask = null;
             showProgress(false);
         }
-
-        private void putUserDataIntoSharedPreferences() {
-            SharedPreferences sharedPreferences = getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("First Name", firstName);
-            editor.putString("Last Name", lastName);
-            editor.putString("Email", emailAdd);
-            editor.putString("ID", userID);
-            Log.d("SharedPrefs", "!!!!userID at Login " + userID + " !!!!");
-            editor.apply();
-        }
     }
 
-
+    private void putUserDataIntoSharedPreferences() {
+        SharedPreferences sharedPreferences = getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = sharedPreferences.edit();
+        prefEditor.putString("First Name", firstName);
+        prefEditor.putString("Last Name", lastName);
+        prefEditor.putString("Email", emailAdd);
+        prefEditor.putString("ID", userID);
+        prefEditor.putString("SessionKey", sessionKey);
+        prefEditor.apply();
+    }
 }
 

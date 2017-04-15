@@ -7,52 +7,62 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.R;
 
 public class SplashScreen extends AppCompatActivity {
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
         new CheckLoginStatus().execute();
     }
-
     private class CheckLoginStatus extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
             // before making db calls
-
         }
-
         @Override
         protected Boolean doInBackground(Void... arg0) {
-            LiteDBHelper status = new LiteDBHelper(getApplicationContext());
-            boolean isLoggedIn = status.getUserLoginStatus();
+            final LiteDBHelper status = new LiteDBHelper(getApplicationContext());
+            //final boolean isLoggedInFromLite = status.getUserLoginStatus();
+            final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
+            boolean isLoggedInFromRemote = false;
+            try {
+                System.out.println(firebaseID.getFirebaseAndroidID());
+                isLoggedInFromRemote = status.checkRemoteSession(firebaseID.getFirebaseAndroidID());
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
             try {
                 Thread.sleep(1200);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
             }
+            if (isLoggedInFromRemote){
+                return true;
+            }
+            else{
+                return false;
+            }
             //returning false because perm login has NOT been set up therefor the isSessionvalid function in onPostExecute will not return true and show mainact.
-            return isLoggedIn;
-
         }
-
         @Override
         protected void onPostExecute(final Boolean isSessionValid) {
             LiteDBHelper status = new LiteDBHelper(getApplicationContext());
             //here the session from the database is still valid... therefore we proceed with auto login
             if (isSessionValid) {
                 Intent MainActivity = new Intent(SplashScreen.this, MainActivity.class);
-                //Now using SharedPreferences instead of bundled extras
                 putUserDataIntoSharedPreferences(status);
-
                 startActivity(MainActivity);
             }
             //session is NOT valid, therefore we go to the login screen.
@@ -63,7 +73,6 @@ public class SplashScreen extends AppCompatActivity {
             // close this activity
             finish();
         }
-
         /**
          * Method to place all userdata into the SharedPreferences (must do this here in Splash to ensure SharedPrefs up-to-date
          * @param status
@@ -78,8 +87,6 @@ public class SplashScreen extends AppCompatActivity {
             prefEditor.putString("SessionKey", status.getSessionKey());
             prefEditor.apply();
         }
-
-
     }
 }
 
