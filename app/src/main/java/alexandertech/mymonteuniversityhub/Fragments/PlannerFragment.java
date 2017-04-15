@@ -174,8 +174,6 @@ public class PlannerFragment extends Fragment {
         recList.setAdapter(taskAdapter); //Connect RecyclerView to the Adapter
         //So, it goes RecyclerView -> Adapter <- TaskArrayList :)
 
-
-
         //This helps the BottomSheetDialog handle keyboard input without hiding the Date & Time Buttons
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
@@ -240,6 +238,7 @@ public class PlannerFragment extends Fragment {
                     }
                 }, todayDate.get(Calendar.YEAR), todayDate.get(Calendar.MONTH), todayDate.get(Calendar.DAY_OF_MONTH));
 
+                datePickerDialog.getDatePicker().setMinDate(todayDate.getTimeInMillis()); //Tasks can't be set in the past
                 datePickerDialog.show();
             }
         });
@@ -259,7 +258,6 @@ public class PlannerFragment extends Fragment {
                         dueTimeText.setText(simpleDateFormat.format(selectedDate.getTime()));
                     }
                 }, todayDate.get(Calendar.HOUR_OF_DAY), todayDate.get(Calendar.MINUTE), false);
-
                 timePickerDialog.show();
             }
         });
@@ -340,8 +338,6 @@ public class PlannerFragment extends Fragment {
                 }
             }
         });
-
-
 
     }
 
