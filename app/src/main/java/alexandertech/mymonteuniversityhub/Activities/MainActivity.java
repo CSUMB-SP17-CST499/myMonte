@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity
                 case 0:
                     return new PlannerFragment();
                 case 1:
-                    return new StudyRoomsFragment();
+                        return new StudyRoomsFragment();
                 case 2:
                     return new MapsFragment();
             }
