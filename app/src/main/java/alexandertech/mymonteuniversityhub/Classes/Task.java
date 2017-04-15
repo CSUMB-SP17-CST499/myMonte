@@ -62,4 +62,14 @@ public class Task {
     public void setId(int id) {
         this.id = id;
     }
+
+    public boolean equals(Object o) {
+        if(o instanceof Task)
+        {
+            Task t = (Task) o;
+            return this.id == ((Task) o).getId();
+        }
+
+        return false;
+    }
 }

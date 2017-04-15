@@ -220,7 +220,7 @@ public boolean logout(String SESSION) throws IOException {
     }
 
 
-    public void insertTask(String task_title, String mdl_db_id, String due_date, String android_reg_token) throws IOException {
+    public int insertTask(String task_title, String mdl_db_id, String due_date, String android_reg_token) throws IOException {
         System.out.println("tASK:" + task_title);
         System.out.println("DB ID :" + mdl_db_id);
         System.out.println("Due Date:" + due_date);
@@ -236,6 +236,56 @@ public boolean logout(String SESSION) throws IOException {
         connection.connect();
         System.out.println(connection.getResponseCode());
 
+        //TODO: Grab taskID from server and return it to store locally in PlannerFragment
+        //omg i can't believe we need this ugly-ass code to parse an HTTP response
+        InputStream is = connection.getInputStream();
+        StringBuffer sb = new StringBuffer();
+        String response = "";
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String inputLine = "";
+        while ((inputLine = br.readLine()) != null) {
+            sb.append(inputLine);
+        }
+        response = sb.toString(); //ta-da, it's a string now
+        String step1 = "";
+
+        try {
+            Log.d("TaskIDFromResponse", response);
+
+            String JsonString = "[" + response + "]";
+            JSONArray initialArray = new JSONArray(JsonString); // - once to get rid of the extra data sent in the HTTP request (200 OK, etc) -
+
+            // - and a second time to get the individual objects out of the step1 string (our desired JSON from server, without the extra junk
+            JSONArray finalArray = null;
+
+            String title = ""; //Store the title from JSON
+            int id = 666; //Store the id from JSON
+            Calendar dueDate = Calendar.getInstance(); //Store the due date from JSON
+
+            for (int i = 0; i < initialArray.length(); i++) {
+                step1 = initialArray.getJSONObject(i).getString("TaskID");
+            }
+
+            Log.d("TaskIDFromJSON", step1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return Integer.parseInt(step1);
+    }
+
+    public void deleteTask(String userID, int taskID) throws IOException{
+        Log.d("userid", "" + userID);
+        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?DeleteItem&mdl_db_id="+userID+"&ID="+taskID);
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("GET");
+        connection.connect();
+        System.out.println(connection.getResponseCode());
     }
 
     public ArrayList<Task> getTasksFromServer(String mdl_db_id) throws IOException {
@@ -287,7 +337,7 @@ public boolean logout(String SESSION) throws IOException {
 
                 //Log.d("haha", finalArray.getJSONObject(0).getString("task_title"), new Exception());
 
-                for ( int j = 0; j <finalArray.length();  j++)
+                for (int j = 0; j <finalArray.length();  j++)
                 {
                     title = finalArray.getJSONObject(j).getString("task_title"); //Set title = the string returned by server
                     id =  Integer.parseInt(finalArray.getJSONObject(j).getString("ID")); //Parse the integer for id from the string returned by server
@@ -297,7 +347,7 @@ public boolean logout(String SESSION) throws IOException {
                     tasksFromServer.add(temp); //Store each task in the list we created above                                  ^^^
                 }
 
-                Log.d("fuck", tasksFromServer.toString());
+                Log.d("Tasks", tasksFromServer.toString());
             }
 
         } catch (JSONException e) {

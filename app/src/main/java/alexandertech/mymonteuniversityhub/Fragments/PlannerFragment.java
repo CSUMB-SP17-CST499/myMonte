@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Exchanger;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
@@ -56,6 +57,7 @@ import alexandertech.mymonteuniversityhub.Classes.EventDecorator;
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.Classes.Task;
+import alexandertech.mymonteuniversityhub.Interfaces.TaskItemClickListener;
 import alexandertech.mymonteuniversityhub.R;
 
 import static alexandertech.mymonteuniversityhub.Activities.MainActivity.sharedPrefs;
@@ -125,10 +127,13 @@ public class PlannerFragment extends Fragment {
         addTaskFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                launchAddTaskDialog();
+                try {
+                    launchAddTaskDialog();
+                } catch(Exception e) {
+                    //TODO: handle exception
+                }
             }
         });
-
 
 
         /*
@@ -140,22 +145,7 @@ public class PlannerFragment extends Fragment {
 
         RecyclerView recList = (RecyclerView) v.findViewById(R.id.cardList); // Connect RecyclerView (cardList) and set its layout manager
         recList.setHasFixedSize(true);
-        recList.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-                return false;
-            }
 
-            @Override
-            public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-                launchViewTaskDialog();
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
@@ -168,10 +158,19 @@ public class PlannerFragment extends Fragment {
             tasks = requestTasksFromServer(); //Initialize TaskList with tasks from server
         } catch (Exception e) {
             tasks = new ArrayList<>(); //Make a brand new empty list if not found on server
-            e.printStackTrace();
+            Log.d("TasksFromServer", "request failed...PlannerFrag:158");
         }
 
-        taskAdapter = new TaskAdapter(tasks); //Connect ArrayList to the Adapter
+        taskAdapter = new TaskAdapter(getContext(), tasks, new TaskItemClickListener() {
+            @Override
+            public void onItemClick(View v, int position) {
+                try {
+                    launchViewTaskDialog(tasks.get(position));
+                } catch(IOException e) {
+
+                }
+            }
+        }); //Connect ArrayList to the Adapter
         recList.setAdapter(taskAdapter); //Connect RecyclerView to the Adapter
         //So, it goes RecyclerView -> Adapter <- TaskArrayList :)
 
@@ -188,7 +187,7 @@ public class PlannerFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
     }
 
-    public void launchAddTaskDialog() {
+    public void launchAddTaskDialog() throws ExecutionException,InterruptedException {
         final BottomSheetDialog addTaskDialog = new BottomSheetDialog(getActivity());
         final View addTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_addtask, null);
         addTaskDialog.setContentView(addTaskLayout);
@@ -275,41 +274,75 @@ public class PlannerFragment extends Fragment {
                 userLName = sharedPrefs.getString("Last Name", "Otter");
                 userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
                 userID = sharedPrefs.getString("ID", "12345");
-
                 final String taskTitle = taskEditText.getText().toString();
                 final String selectedDateString = Long.toString(selectedDate.getTime().getTime()); //gotta convert from cal to date to Unixtime
                 SimpleDateFormat prettyDueDate = new SimpleDateFormat("MMM d, h:mm a");
-                final Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
+
+                RunnableFuture f = new FutureTask(new Callable() {
+                    public Integer call() {
                         try {
-                            liteDBHelper.insertTask(taskTitle, userID, selectedDateString, firebaseInstance.getFirebaseAndroidID());
+                            int taskID = liteDBHelper.insertTask(taskTitle, userID, selectedDateString, firebaseInstance.getFirebaseAndroidID());
                             Log.d("Timestamp Accuracy", selectedDateString);
+                            return taskID;
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+
+                        //If above failed
+                        return 666;
                     }
                 });
-                thread.start();
 
-                Task t = new Task(taskTitle, selectedDate);
+                new Thread(f).start();
+
+                int taskID = 0;
+                try {
+                     taskID = (Integer) f.get();
+                } catch(Exception e) {
+                    Log.d("TaskIntConversionError", "oops int");
+                }
+
+                Task t = new Task(taskTitle, selectedDate, taskID);
                 tasks.add(t);
                 taskAdapter.notifyDataSetChanged();
                 addTaskDialog.closeOptionsMenu();
-                addTaskDialog.hide();
+                addTaskDialog.dismiss();
                 Snackbar.make(getView(), "Saved \"" + taskTitle + "\" for " + prettyDueDate.format(selectedDate.getTime()), Snackbar.LENGTH_LONG).show();
             }
         });
     }
 
-    public void launchViewTaskDialog() {
+    public void launchViewTaskDialog(Task taskSelected) throws IOException {
         //TODO: Reformat this layout to show Task info and allow deletion/completion
+        final Task t = taskSelected;
         final BottomSheetDialog viewTaskDialog = new BottomSheetDialog(getActivity());
-        final View viewTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_addtask, null); //re-using this layout, tweaking into a View-Only version
+        final View viewTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_deletetask, null); //re-using this layout, tweaking into a View-Only version
+        Button delete = (Button) viewTaskLayout.findViewById(R.id.btnDeleteTask);
+
         viewTaskDialog.setContentView(viewTaskLayout);
         viewTaskDialog.show();
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                try {
+                    deleteTask(t);
+                    tasks.remove(t);
+                    viewTaskDialog.dismiss();
+                    Snackbar.make(getView(), "Deleted task!", Snackbar.LENGTH_SHORT).show();
+                } catch(IOException e) {
+                    viewTaskDialog.dismiss();
+                    Snackbar.make(getView(), "Oops, internal server error!", Snackbar.LENGTH_SHORT).show();
+                    Log.d("DeleteError", e.toString());
+                }
+            }
+        });
+
+
+
     }
 
     public ArrayList<Task> requestTasksFromServer() throws IOException,ExecutionException,InterruptedException {
@@ -330,4 +363,29 @@ public class PlannerFragment extends Fragment {
         result = (ArrayList) f.get();
         return result;
     }
+
+    public void deleteTask(final Task t) throws IOException {
+        final Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final LiteDBHelper liteDBHelper = new LiteDBHelper(getContext());
+                    sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
+                    userID = sharedPrefs.getString("ID", "12345");
+                    Log.d("Object task id", Integer.toString(t.getId()));
+                    liteDBHelper.deleteTask(userID, t.getId());
+                    return;
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        taskAdapter.notifyDataSetChanged();
+
+    }
+
 }
