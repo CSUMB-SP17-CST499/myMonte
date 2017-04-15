@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity
     private String SESSION_ID = "";
     private int[] tabIcons = {
             R.mipmap.planner_icon,
-            R.mipmap.ic_school_black_24dp,
+            R.mipmap.ic_local_library_black_24dp,
             R.mipmap.ic_directions_car_black_24dp
     };
 
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity
         setUpNavigationDrawer();
         setUpTabViewPager();
         showWelcomeMessage();
+        setUpBuildingMap();
     }
 
     public void setUpPrefs(){
@@ -379,8 +381,13 @@ public class MainActivity extends AppCompatActivity
         mBuilder.setPositiveButton("Get Directions", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(!mSpinner.getSelectedItem().toString().equalsIgnoreCase("Please choose a building…")){
-                    Toast.makeText(MainActivity.this, "Works", Toast.LENGTH_SHORT).show();
+                if(!mSpinner.getSelectedItem().toString().
+                        equalsIgnoreCase("Please choose a building…")){
+                    Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                            Uri.parse("http://maps.google.com/maps?daddr=" +
+                                    buildingMap.get(mSpinner.getSelectedItem().toString())));
+                    startActivity(intent);
+
                     dialog.dismiss();
                 }
             }
