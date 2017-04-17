@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -312,11 +313,29 @@ public class PlannerFragment extends Fragment {
         });
     }
 
-    public void launchViewTaskDialog(Task taskSelected) throws IOException {
-        //TODO: Reformat this layout to show Task info and allow deletion/completion
+    public void launchViewTaskDialog(final Task taskSelected) throws IOException {
         final Task t = taskSelected;
         final BottomSheetDialog viewTaskDialog = new BottomSheetDialog(getActivity());
         final View viewTaskLayout = getActivity().getLayoutInflater().inflate(R.layout.bottomsheetdialog_deletetask, null); //re-using this layout, tweaking into a View-Only version
+
+        /**
+         * Populate the bottomsheetdialog with specific task data.
+         * This includes Title TextView, Date TextView, Time TextView, and a Delete button.
+         */
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d"); //Formatter for Date (May 4)
+        SimpleDateFormat timeFormat = new SimpleDateFormat("h:mm a");//Formatter for Time (6:00pm)
+
+        Log.d("DueDateTextView", taskSelected.getDueDate().toString());
+        TextView title = (TextView) viewTaskLayout.findViewById(R.id.txtTaskName); //Title of task
+        TextView date = (TextView) viewTaskLayout.findViewById(R.id.dueDateText); //Date of task
+        TextView time = (TextView) viewTaskLayout.findViewById(R.id.dueTimeText); //Time of task
+
+        title.setText(taskSelected.getName());
+        date.setText(dateFormat.format(taskSelected.getDueDate().getTime()));
+        time.setText(timeFormat.format(taskSelected.getDueDate().getTime()));
+
+
         Button delete = (Button) viewTaskLayout.findViewById(R.id.btnDeleteTask);
 
         viewTaskDialog.setContentView(viewTaskLayout);
