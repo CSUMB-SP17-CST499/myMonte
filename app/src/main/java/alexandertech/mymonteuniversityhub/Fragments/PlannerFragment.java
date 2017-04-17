@@ -241,9 +241,9 @@ public class PlannerFragment extends Fragment {
 
                 datePickerDialog.getDatePicker().setMinDate(todayDate.getTimeInMillis()); //Tasks can't be set in the past
                 datePickerDialog.show();
+
             }
         });
-
 
         btnDueTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,12 +274,13 @@ public class PlannerFragment extends Fragment {
                 userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
                 userID = sharedPrefs.getString("ID", "12345");
                 final String taskTitle = taskEditText.getText().toString();
-                final String selectedDateString = Long.toString(selectedDate.getTime().getTime()); //gotta convert from cal to date to Unixtime
+                final String selectedDateString = Long.toString((selectedDate.getTime().getTime() / 1000)); //gotta convert from cal to date to Unixtime
                 SimpleDateFormat prettyDueDate = new SimpleDateFormat("MMM d, h:mm a");
 
                 RunnableFuture f = new FutureTask(new Callable() {
                     public Integer call() {
                         try {
+                            Log.d("potato:", selectedDateString);
                             int taskID = liteDBHelper.insertTask(taskTitle, userID, selectedDateString, firebaseInstance.getFirebaseAndroidID());
                             Log.d("Timestamp Accuracy", selectedDateString);
                             return taskID;

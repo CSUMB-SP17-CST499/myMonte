@@ -236,8 +236,10 @@ public boolean logout(String SESSION) throws IOException {
         connection.connect();
         System.out.println(connection.getResponseCode());
 
-        //TODO: Grab taskID from server and return it to store locally in PlannerFragment
-        //omg i can't believe we need this ugly-ass code to parse an HTTP response
+        /**
+         * Now that the insert request has been made (successfully), we parse the JSON from HTTP response to get our TaskID (assigned on server)
+         * and map it to the correct Task object in the Tasks arraylist
+         */
         InputStream is = connection.getInputStream();
         StringBuffer sb = new StringBuffer();
         String response = "";
@@ -251,7 +253,6 @@ public boolean logout(String SESSION) throws IOException {
 
         try {
             Log.d("TaskIDFromResponse", response);
-
             String JsonString = "[" + response + "]";
             JSONArray initialArray = new JSONArray(JsonString); // - once to get rid of the extra data sent in the HTTP request (200 OK, etc) -
 
