@@ -5,19 +5,11 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background= "#01579B"
+    android:background= "@mipmap/back"
     tools:context="alexandertech.mymonteuniversityhub.Activities.LoginActivity"
     android:weightSum="1">
 
-    <ImageView
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:id="@+id/csumb"
-        android:layout_marginBottom="75dp"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:src="@drawable/csumb2"
-        android:layout_marginTop="50dp"/>
+
 
     <ProgressBar
         android:id="@+id/login_progress"
@@ -26,16 +18,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:visibility="gone" />
-
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Welcome to myMonte! Please sign in below with your credentials."
-        android:textAlignment="center"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="#ffffff" />
 
     <ScrollView
         android:id="@+id/login_form"
@@ -50,6 +32,28 @@
             android:layout_marginTop="20dp"
             android:orientation="vertical"
             android:padding="25dp">
+
+            <ImageView
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:id="@+id/csumb"
+                android:layout_marginBottom="5dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/csumb2"
+                android:layout_marginTop="25dp"/>
+
+
+            <TextView
+                android:id="@+id/txtWelcome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textAlignment="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
+                android:textColor="#ffffff"
+                android:lineSpacingExtra="1dp"
+                android:layout_marginBottom="10dp"/>
 
 
             <android.support.design.widget.TextInputLayout
@@ -68,6 +72,7 @@
 
                     android:drawableLeft="@mipmap/ic_account_circle_black_24dp"
                     android:drawablePadding="10dp"
+
                     android:gravity="center_vertical"
                     android:hint="Email"
                     android:inputType="textEmailAddress"

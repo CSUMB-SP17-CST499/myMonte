@@ -13,6 +13,7 @@ import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -21,7 +22,9 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
 import android.text.TextUtils;
+import android.text.style.BackgroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -129,6 +132,13 @@ public String  lastName ="";
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
+        TextView myTV = (TextView)findViewById(R.id.txtWelcome);
+        String  textString = "Welcome to myMonte! Please sign in below with your credentials.";
+        Spannable spanText = Spannable.Factory.getInstance().newSpannable(textString);
+        spanText.setSpan(new BackgroundColorSpan(Color.parseColor("#1f346b")), 0, 63, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        myTV.setText(spanText);
+
 
     }
 
