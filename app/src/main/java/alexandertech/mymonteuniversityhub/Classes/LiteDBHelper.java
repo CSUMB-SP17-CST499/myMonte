@@ -1,5 +1,6 @@
 package alexandertech.mymonteuniversityhub.Classes;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -39,6 +40,12 @@ public class LiteDBHelper extends SQLiteOpenHelper {
     public  SQLiteDatabase myDB;
     public String databasePath = "";
     Context context2;
+    public static final String CAMPUSBUILDINGS_TABLE = "campusBuildings";
+    public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_BUILDINGNAME = "buildingName";
+    public static final String COLUMN_GPSCOORDINATES = "gpsCoordinates";
+
+
     public LiteDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         databasePath = context.getDatabasePath(DATABASE_NAME).toString();
@@ -49,7 +56,12 @@ public class LiteDBHelper extends SQLiteOpenHelper {
         //SQLiteDatabase myDB = this.getWritableDatabase();
         String CREATE_SESSION_TABLE = "CREATE TABLE IF NOT EXISTS  ActiveSessions ( id INTEGER PRIMARY KEY AUTOINCREMENT, FName VARCHAR , Type VARCHAR, LName VARCHAR, Email VARCHAR, SessionKey VARCHAR, DatabaseID VARCHAR, Date VARCHAR);";
         db.execSQL(CREATE_SESSION_TABLE);
+
     }
+
+
+
+
     //method for storing the account when the user log in. 
     public boolean storeAccount (String FName, String LName, String Email, String SessionKey, String DatabaseID ){
         boolean isSaved=false;
@@ -81,6 +93,10 @@ public boolean getUserLoginStatus(){
     }
     return session;
 }
+
+
+
+
     //Getter, to get the Moodle User database ID from the local SQLite db
     public String getID(){
         SQLiteDatabase myDB = this.getWritableDatabase();
