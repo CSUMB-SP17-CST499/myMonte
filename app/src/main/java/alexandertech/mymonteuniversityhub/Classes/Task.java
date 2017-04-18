@@ -1,5 +1,6 @@
 package alexandertech.mymonteuniversityhub.Classes;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -9,16 +10,24 @@ import java.util.Date;
 
 public class Task {
     protected String name;
-    protected Date dueDate;
+    protected Calendar dueDate;
+    protected int id;
     private String course; // TODO: Replace this with a course class later
 
     public Task(String name) {
         this.name = name;
     }
 
-    public Task(String name, Date dueDate) {
+    public Task(String name, Calendar dueDate) {
         this.name = name;
         this.dueDate = dueDate;
+        this.id = 666;
+    }
+
+    public Task(String name, Calendar dueDate, int id) {
+        this.name = name;
+        this.dueDate = dueDate;
+        this.id = id;
     }
 
     public String getName() {
@@ -29,11 +38,11 @@ public class Task {
         this.name = name;
     }
 
-    public Date getDueDate() {
+    public Calendar getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(Calendar dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -44,5 +53,23 @@ public class Task {
 
     public void setCourse(String course) {
         this.course = course;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public boolean equals(Object o) {
+        if(o instanceof Task)
+        {
+            Task t = (Task) o;
+            return this.id == ((Task) o).getId();
+        }
+
+        return false;
     }
 }
