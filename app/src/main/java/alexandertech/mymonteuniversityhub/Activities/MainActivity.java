@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -34,7 +33,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -331,7 +329,11 @@ public class MainActivity extends AppCompatActivity
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
         }else if (id == R.id.reportIssue){
-            if (hasInternetConnection()) {
+            Snackbar.make(findViewById(android.R.id.content), "Sorry, this feature is broken" , Snackbar.LENGTH_LONG)
+                    .setActionTextColor(Color.BLUE)
+                    .show();
+
+            /*if (hasInternetConnection()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
                 alert.setTitle("Report an Issue");
                 WebView wv = new WebView(this);
@@ -356,7 +358,7 @@ public class MainActivity extends AppCompatActivity
             else{
                 displaySnackbar();
             }
-
+*/
         }else if (id == R.id.logout) {
             if (hasInternetConnection()) {
                 final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());

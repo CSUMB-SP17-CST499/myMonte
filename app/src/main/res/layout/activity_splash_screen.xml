@@ -20,6 +20,8 @@
         android:textSize="36sp"
         android:textColor="@color/common_google_signin_btn_text_light_default"
         android:textStyle="normal|bold"
+        android:id="@+id/textView"
+        android:layout_marginBottom="11dp"
         android:layout_above="@+id/progressBar5"
         android:layout_alignParentStart="true" />
 
@@ -37,7 +39,8 @@
         android:layout_height="match_parent"
         android:src="@drawable/otter"
         android:scaleType="center"
+        android:layout_above="@+id/textView"
         android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_marginBottom="11dp" />
 
 </RelativeLayout>
