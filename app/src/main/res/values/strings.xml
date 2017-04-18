@@ -56,73 +56,57 @@
         <item>Asilomar Hall(203)</item>
         <item>Avocet Hall(208)</item>
         <item>Beach Hall(21)</item>
-        <item>Black Box Cabaret(81)</item>
         <item>Chapman Science Academic Center(53)</item>
         <item>Child Care Center(91)</item>
-        <item>Cinematic Arts and Technology (27)</item>
-        <item>Coast Hall (45)</item>
-        <item>CSUMB at North Salinas (170)</item>
-        <item>CSUMB at Ryan Ranch (1001)</item>
-        <item>CSUMB at Salinas City Center (1002)</item>
-        <item>Cypress Hall (202)</item>
-        <item>Del Mar (3)</item>
-        <item>Dining Commons (16)</item>
-        <item>Dunes Hall (10)</item>
-        <item>Facilities Services and Operations (37)</item>
-        <item>Field House (902)</item>
-        <item>Field Office (902C)</item>
-        <item>Freeman field (STADIUM)</item>
-        <item>Gavilan Hall (201)</item>
-        <item>Green Hall (58)</item>
-        <item>Harbor Hall (46)</item>
-        <item>Health and Wellness Services (80)</item>
-        <item>Heron Hall (18)</item>
-        <item>IT Services (43)</item>
-        <item>Joel and Dena Gambord Business and Information Technology Building (506)</item>
-        <item>Mail Room/Shipping and Receiving (35)</item>
-        <item>Manzanita Hall (205)</item>
-        <item>Meeting House (98)</item>
-        <item>Monterey College of Law (MCOL)</item>
-        <item>Mountain Hall (84)</item>
-        <item>Music Hall (30)</item>
-        <item>Oaks Hall (490)</item>
-        <item>Oaks Hall Annex (491)</item>
-        <item>Oaks Hall Storage (491)</item>
-        <item>Ocean Hall (86)</item>
-        <item>Otter Express (14)</item>
-        <item>Otter Soccer Complex (SOCCER)</item>
-        <item>Otter Sports Center (90)</item>
-        <item>Pacific Hall (44)</item>
-        <item>Pinnacles Suites (302)</item>
-        <item>Playa (2)</item>
-        <item>Promontory Center (326)</item>
-        <item>Promontory East (327)</item>
-        <item>Promontory West (325)</item>
-        <item>Reading Center (59)</item>
-        <item>Sand Hall (8)</item>
-        <item>Sanderling Hall (211)</item>
+        <item>Cinematic Arts and Technology(27)</item>
+        <item>Coast Hall(45)</item>
+        <item>Cypress Hall(202)</item>
+        <item>Dining Commons(16)</item>
+        <item>Dunes Hall(10)</item>
+
+        <item>Facilities Services and Operations(37)</item>
+        <item>Field House(902)</item>
+        <item>Field Office(902C)</item>
+        <item>Freeman field(STADIUM)</item>
+        <item>Gavilan Hall(201)</item>
+        <item>Green Hall(58)</item>
+        <item>Harbor Hall(46)</item>
+        <item>Health and Wellness Services(80)</item>
+        <item>Heron Hall(18)</item>
+        <item>IT Services(43)</item>
+        <item>Joel and Dena Gambord Business and Information Technology Building(506)</item>
+
+        <item>Manzanita Hall(205)</item>
+        <item>Meeting House(98)</item>
+
+        <item>Mountain Hall(84)</item>
+        <item>Music Hall(30)</item>
+
+
+        <item>Ocean Hall(86)</item>
+        <item>Otter Express(14)</item>
+        <item>Otter Soccer Complex(SOCCER)</item>
+        <item>Otter Sports Center(90)</item>
+        <item>Pacific Hall(44)</item>
+
+
+
+        <item>Reading Center(59)</item>
+
+
         <item>Science Instructional Lab Annex (50)</item>
-        <item>Science Research Lab Annex (13)</item>
-        <item>Softball field (SOFTBALL)</item>
-        <item>Strawberry Apartments (301)</item>
-        <item>Student Center (12)</item>
-        <item>Student Recreation Field (REC)</item>
-        <item>Student Services (47)</item>
-        <item>Surf Hall (6)</item>
-        <item>Tanimura and Antle Family Memorial Library (508)</item>
-        <item>Telecommunications (41)</item>
-        <item>Tide Hall (23)</item>
-        <item>Tortuga Hall (210)</item>
-        <item>University Center (29)</item>
-        <item>University Storage (36)</item>
-        <item>Valley Hall (82)</item>
-        <item>Vineyard Suites (303)</item>
-        <item>Visual and Public Art (VPA) - Center (72)</item>
-        <item>Visual and Public Art (VPA)-East (71)</item>
-        <item>Visual and Public Art (VPA)-West (73)</item>
-        <item>Watershed Institute (42)</item>
-        <item>Wave Hall (4)</item>
-        <item>Willet Hall (204)</item>
+
+        <item>Softball field(SOFTBALL)</item>
+        <item>Strawberry Apartments(301)</item>
+        <item>Student Center(12)</item>
+
+        <item>Student Services(47)</item>
+        <item>Surf Hall(6)</item>
+        <item>Tanimura and Antle Family Memorial Library(508)</item>
+        <item>University Center(29)</item>
+        <item>Watershed Institute(42)</item>
+
+        <item>Willet Hall(204)</item>
         <item>World Languages and Cultures-North (49)</item>
         <item>World Languages and Cultures-South (48)</item>
         <item>World Theater (28)</item>

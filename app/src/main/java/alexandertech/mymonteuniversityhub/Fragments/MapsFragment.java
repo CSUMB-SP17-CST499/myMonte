@@ -39,11 +39,16 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.kishan.askpermission.AskPermission;
 import com.kishan.askpermission.ErrorCallback;
 import com.kishan.askpermission.PermissionCallback;
 import com.kishan.askpermission.PermissionInterface;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import alexandertech.mymonteuniversityhub.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -118,14 +123,16 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
         else if(currentParkingLocation == null){
             Snackbar.make(getView(), "No location captured.",Snackbar.LENGTH_LONG).show();
         }
-        else if(currentParkingLocation!= null){
+        else if(currentParkingLocation != null){
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String longitude = String.valueOf(currentParkingLocation.longitude);
                     String latitude = String.valueOf(currentParkingLocation.latitude);
+                    String date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(Calendar.getInstance().getTime());
                     prefs.putString("location", latitude + "," + longitude);
+                    prefs.putString("date", date);
                     prefs.apply();
                     Snackbar.make(getView(), "Parking Location saved!", Snackbar.LENGTH_SHORT).show();
                 }
@@ -154,12 +161,13 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
             Toast.makeText(getActivity(), retrievedLat + " and "
                     + retrievedLong, Toast.LENGTH_SHORT).show();
 
+            String date = sharedPrefs.getString("date","");
             LatLng latlng = new LatLng(retrievedLat, retrievedLong);
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(latlng);
-            markerOptions.title("Last Parked Position");
+            markerOptions.title(date);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            mGoogleMap.addMarker(markerOptions);
+            mGoogleMap.addMarker(markerOptions).showInfoWindow();
             mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlng, 18));
 
         } else {
@@ -218,8 +226,6 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
                 //final LocationSettingsStates state = result.getLocationSettingsStates();
                 switch (status.getStatusCode()){
                     case LocationSettingsStatusCodes.SUCCESS:
-                        // All location settings are satisfied. The client can initialize location
-                        // requests here.
                         Log.d("SettingRequest", "inside Success");
                         getUserLocation();
                         break;
@@ -252,7 +258,6 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
         Log.d("Permissions denied", "On permissions denied method");
         Snackbar.make(getView(), "Permissions denied",Snackbar.LENGTH_SHORT).show();
     }
-
 
     //Call back method for when map is ready to be used.
     @Override
@@ -306,13 +311,10 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
             @Override
             public void onResult(@NonNull LocationSettingsResult result) {
                 final Status status = result.getStatus();
-                //final LocationSettingsStates state = result.getLocationSettingsStates();
                 switch (status.getStatusCode()){
                     case LocationSettingsStatusCodes.SUCCESS:
                         Log.d("SettingRequest", "inside Success");
                         getUserLocation();
-                        // All location settings are satisfied. The client can initialize location
-                        // requests here.
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                         Log.d("SettingRequest", "inside resolution required");
