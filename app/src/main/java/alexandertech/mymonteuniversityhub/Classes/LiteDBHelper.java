@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
+import java.net.URLEncoder;
 
 import static java.security.AccessController.getContext;
 
@@ -219,13 +221,14 @@ public boolean logout(String SESSION) throws IOException {
 
     }
 
-
     public int insertTask(String task_title, String mdl_db_id, String due_date, String android_reg_token) throws IOException {
         System.out.println("tASK:" + task_title);
         System.out.println("DB ID :" + mdl_db_id);
         System.out.println("Due Date:" + due_date);
         System.out.println("Android Token" + android_reg_token);
-        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&mdl_db_id="+mdl_db_id+ "&due_date=" + due_date + "&task_title=" +task_title+ "&android_reg_token=" +android_reg_token);
+        String urlString = "https://monteapp.me/moodle/monteapi/authn/ToDoList/TodoList.php?InsertItem&mdl_db_id="+mdl_db_id+ "&due_date=" + due_date + "&task_title=" + Uri.encode(task_title)+ "&android_reg_token=" +android_reg_token;
+        URL url = new URL(urlString);
+
         System.out.println(url.toString());
         HttpURLConnection connection = null;
         connection = (HttpURLConnection) url.openConnection();
@@ -312,7 +315,6 @@ public boolean logout(String SESSION) throws IOException {
 
         //Let's parse JSON into a usable arraylist!
         ArrayList<Task> tasksFromServer = new ArrayList<>(); //Construct a list to hold the soon-to-be extracted tasks
-
 
         //Ok, this is a bit of a process
         try {
