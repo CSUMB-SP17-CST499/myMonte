@@ -148,6 +148,44 @@ public class MainActivity extends AppCompatActivity
         buildingMap.put("Asilomar Hall(203)","36.653273, -121.796321");
         buildingMap.put("Avocet Hall(208)","36.653490, -121.799627");
         buildingMap.put("Beach Hall(21)","36.652818, -121.799203");
+        buildingMap.put("Chapman Science Academic Center(53)","36.653692, -121.794803");
+        buildingMap.put("Child Care Center(91)","36.654235, -121.806792");
+        buildingMap.put("Cinematic Arts and Technology(27)","36.652076, -121.793929");
+        buildingMap.put("Coast Hall(45)","36.650911, -121.793096");
+        buildingMap.put("Cypress Hall(202)","36.653830, -121.795826");
+        buildingMap.put("Dining Commons(16)","36.654398, -121.798917");
+        buildingMap.put("Dunes Hall(10)","36.653869, -121.800673");
+        buildingMap.put("Facilities Services and Operations(37)","36.649167, -121.787747");
+        buildingMap.put("Field House(902)","36.649703, -121.805912");
+        buildingMap.put("Field Office(902C)", "36.649703, -121.805912");
+        buildingMap.put("Freeman field(STADIUM)","36.650983, -121.805012");
+        buildingMap.put("Gavilan Hall(201)","36.654621, -121.792968");
+        buildingMap.put("Green Hall(58)","36.652091, -121.790566");
+        buildingMap.put("Harbor Hall(46)","36.651312, -121.793062");
+        buildingMap.put("Health and Wellness Services(80)","36.655772, -121.803121");
+        buildingMap.put("Heron Hall(18)","36.654277, -121.799739");
+        buildingMap.put("IT Services(43)","36.649533, -121.793127");
+        buildingMap.put("Joel and Dena Gambord Business and Information Technology Building(506)","36.652593, -121.797327");
+        buildingMap.put("Manzanita Hall(205)","36.653466, -121.797020");
+        buildingMap.put("Meeting House(98)","36.653444, -121.801516");
+        buildingMap.put("Mountain Hall(84)","36.655724, -121.806348");
+        buildingMap.put("Music Hall(30)","36.648099, -121.794442");
+        buildingMap.put("Ocean Hall(86)","36.655713, -121.807124");
+        buildingMap.put("Otter Express(14)","36.654239, -121.798185");
+        buildingMap.put("Otter Soccer Complex(SOCCER)","36.649808, -121.808161");
+        buildingMap.put("Otter Sports Center(90)","36.654608, -121.808206");
+        buildingMap.put("Pacific Hall(44)","36.650241, -121.793155");
+        buildingMap.put("Reading Center(59)","36.652713, -121.790520");
+        buildingMap.put("Science Instructional Lab Annex (50)","36.652811, -121.793809");
+        buildingMap.put("Softball field(SOFTBALL)","36.648767, -121.805215");
+        buildingMap.put("Strawberry Apartments(301)","36.655669, -121.800360");
+        buildingMap.put("Student Center(12)", "36.654429, -121.797398");
+        buildingMap.put("Student Services(47)", "Student Services(47)");
+        buildingMap.put("Surf Hall(6)","36.653685, -121.797351");
+        buildingMap.put("Tanimura and Antle Family Memorial Library(508)", "36.652583, -121.796194");
+        buildingMap.put("University Center(29)","36.650260, -121.794185");
+        buildingMap.put("Watershed Institute(42)","36.650004, -121.792673");
+
 
 
     }
