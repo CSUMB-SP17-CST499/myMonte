@@ -46,6 +46,12 @@
     <string name="dialog_title">Save new parking location?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="add_new_task">Add New Task</string>
+    <string name="what_do_you_need_to_do">What do you need to do?</string>
+    <string name="due_date">Due Date</string>
+    <string name="due_time">Due Time</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
 
 
     <string-array name="buildings">

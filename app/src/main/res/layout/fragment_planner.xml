@@ -12,9 +12,8 @@
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/calendarView"
-            app:mcv_headerTextAppearance="@style/Base.TextAppearance.AppCompat.Headline">
+            android:layout_height="228dp"
+            android:id="@+id/calendarView">
         </com.prolificinteractive.materialcalendarview.MaterialCalendarView>
     </android.support.v7.widget.CardView>
 

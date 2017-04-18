@@ -1,14 +1,25 @@
 package alexandertech.mymonteuniversityhub.Adapters;
 
+import android.content.Context;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.List;
 
+import alexandertech.mymonteuniversityhub.Activities.MainActivity;
 import alexandertech.mymonteuniversityhub.Classes.Task;
+import alexandertech.mymonteuniversityhub.Fragments.PlannerFragment;
+import alexandertech.mymonteuniversityhub.Interfaces.TaskItemClickListener;
 import alexandertech.mymonteuniversityhub.R;
 
 /**
@@ -16,13 +27,22 @@ import alexandertech.mymonteuniversityhub.R;
  * http://www.binpress.com/tutorial/android-l-recyclerview-and-cardview-tutorial/156
  */
 
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> implements View.OnClickListener {
 
 
     private List<Task> taskList; // A list of the current tasks
+    Context mContext;
+    TaskItemClickListener listener;
 
-    public TaskAdapter(List<Task> taskList) {
+
+    public TaskAdapter(Context c, List<Task> taskList, TaskItemClickListener tl) {
+        this.mContext = c;
         this.taskList = taskList;
+        this.listener = tl;
+    }
+
+    public void onClick(View v) {
+
     }
 
 
@@ -34,10 +54,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     @Override
-    public void onBindViewHolder(TaskViewHolder taskViewHolder, int position) {
+    public void onBindViewHolder(final TaskViewHolder taskViewHolder, int position) {
         Task t = taskList.get(position);
         System.out.println(taskViewHolder);
         taskViewHolder.taskName.setText(t.getName());
+        taskViewHolder.id = t.getId();
+
+//        taskViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Snackbar.make(v, taskViewHolder.taskName.getText() + " " + taskViewHolder.id, Snackbar.LENGTH_LONG).show();
+//            }
+//        });
 
         return;
     }
@@ -47,7 +75,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         View itemView = LayoutInflater.
                 from(parent.getContext()).
                 inflate(R.layout.tasklist, parent, false);
-        return new TaskViewHolder(itemView);
+
+        final TaskViewHolder mViewHolder = new TaskViewHolder(itemView);
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(v, mViewHolder.getPosition());
+            }
+        });
+
+        return mViewHolder;
     }
 
     /**
@@ -59,10 +96,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
 
         protected TextView taskName;
+        private int id;
+        private Calendar dueDate;
+        private CardView cardView;
         // TODO: add the rest of the task attributes (due date, course)
 
         public TaskViewHolder(View view){
             super(view);
+
+            //Set the OnClick action for each element in a card.
+            cardView = (CardView) view.findViewById(R.id.taskCard);
+//            cardView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                }
+//            });
             taskName = (TextView) view.findViewById(R.id.txtTaskName);
         }
 
@@ -71,5 +119,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         }
 
     }
+
 
 }
