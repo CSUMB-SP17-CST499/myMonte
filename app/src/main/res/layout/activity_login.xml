@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
     android:orientation="vertical"
-    android:background= "#01579B
-"
+    android:background= "#01579B"
     tools:context="alexandertech.mymonteuniversityhub.Activities.LoginActivity"
     android:weightSum="1">
 
