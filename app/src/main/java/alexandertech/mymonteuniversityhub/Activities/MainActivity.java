@@ -182,9 +182,11 @@ public class MainActivity extends AppCompatActivity
         buildingMap.put("Tanimura and Antle Family Memorial Library(508)", "36.652583, -121.796194");
         buildingMap.put("University Center(29)","36.650260, -121.794185");
         buildingMap.put("Watershed Institute(42)","36.650004, -121.792673");
-
-
-
+        buildingMap.put("Willet Hall(204)", "36.653982, -121.796404");
+        buildingMap.put("World Languages and Cultures-North(49)", "36.652760, -121.792603");
+        buildingMap.put("World Languages and Cultures-South(48)", "36.652347, -121.792686");
+        buildingMap.put("World Theater(28)", "36.650861, -121.793879");
+        buildingMap.put("Yarrow Hall(206)", "36.653505, -121.797649");
     }
 
     class PagerAdapter extends FragmentPagerAdapter{

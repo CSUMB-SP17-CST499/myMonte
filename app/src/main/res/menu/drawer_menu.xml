@@ -28,7 +28,7 @@
     <item
         android:id="@+id/MapYourRoute"
         android:icon="@mipmap/ic_directions_black_24dp"
-        android:title="Map Your Route" />
+        android:title="Find Building" />
 
     <item
         android:id="@+id/CampusPD"
