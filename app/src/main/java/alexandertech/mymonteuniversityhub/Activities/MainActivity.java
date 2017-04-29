@@ -414,9 +414,9 @@ public class MainActivity extends AppCompatActivity
 
         final Spinner mSpinner = (Spinner) mView.findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(MainActivity.this,
-                android.R.layout.simple_spinner_dropdown_item,getResources()
+                android.R.layout.simple_expandable_list_item_1,getResources()
                 .getStringArray(R.array.buildings));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_expandable_list_item_1);
         mSpinner.setAdapter(adapter);
 
         mBuilder.setPositiveButton("Get Directions", new DialogInterface.OnClickListener() {
