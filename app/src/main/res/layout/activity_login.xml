@@ -30,17 +30,19 @@
             android:layout_marginBottom="10dp"
             android:layout_marginTop="20dp"
             android:orientation="vertical"
-            android:padding="25dp">
+            android:padding="25dp"
+            android:weightSum="1">
 
             <ImageView
-                android:layout_width="300dp"
+                android:layout_width="314dp"
                 android:layout_height="100dp"
                 android:id="@+id/csumb"
                 android:layout_marginBottom="5dp"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
                 android:src="@drawable/otter"
-                android:layout_marginTop="25dp"/>
+                android:layout_marginTop="25dp"
+                android:layout_weight="0.51" />
 
 
             <TextView
@@ -114,6 +116,15 @@
                     android:layout_height="wrap_content"
                     android:background="@color/csumb_blue"
                     android:text="Login"
+                    android:textColor="#ffffff" />
+
+                <Button
+                    android:id="@+id/guestLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/holo_red_dark"
+                    android:text="Guest Mode"
                     android:textColor="#ffffff" />
 
             </android.support.design.widget.TextInputLayout>

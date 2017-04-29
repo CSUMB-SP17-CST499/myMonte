@@ -52,6 +52,7 @@
     <string name="due_time">Due Time</string>
     <string name="save">Save</string>
     <string name="delete">Delete</string>
+    <string name="CampusEvents">Campus Events</string>
 
 
     <string-array name="buildings">

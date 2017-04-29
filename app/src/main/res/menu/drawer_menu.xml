@@ -14,17 +14,16 @@
        </menu>
    </item>
 
-
+    <item android:title="Campus Resources">
+        <menu>
     <item
         android:id="@+id/CampusNews"
         android:icon="@mipmap/ic_local_library_black_24dp"
         android:title="@string/CampusNews" />
-
     <item
-        android:id="@+id/grades"
-        android:title="View Course Grades"
-        android:icon="@mipmap/ic_school_black_24dp"/>
-
+        android:id="@+id/CampusEvents"
+        android:icon="@mipmap/ic_event_note_black_24dp"
+        android:title="@string/CampusEvents" />
     <item
         android:id="@+id/MapYourRoute"
         android:icon="@mipmap/ic_directions_black_24dp"
@@ -34,6 +33,22 @@
         android:id="@+id/CampusPD"
         android:icon="@mipmap/ic_phone_in_talk_black_24dp"
         android:title="Campus PD" />
+        </menu>
+    </item>
+
+
+    <item android:title="Academics">
+        <menu>
+    <item
+        android:id="@+id/grades"
+        android:title="View Course Grades"
+        android:icon="@mipmap/ic_school_black_24dp"/>
+        </menu>
+    </item>
+
+
+
+
     <item
         android:id="@+id/reportIssue"
         android:icon="@android:drawable/ic_dialog_alert"

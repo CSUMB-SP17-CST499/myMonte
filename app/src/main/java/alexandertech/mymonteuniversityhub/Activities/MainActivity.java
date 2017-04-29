@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity
             "oWjwIoFBU3YQnOR0bwg/viewform?usp=sf_link";
     private String food = "https://csumb.sodexomyway.com/" +
             "smgmenu/display/csu-monterey%20bay%20dining%20common%20-%20resident%20dining";
+
+    private String eventsPage = "https://csumb.edu/calendar";
     private String userEmail = "";
     private String userFName = "";
     private String userLName = "";
@@ -96,7 +98,7 @@ public class MainActivity extends AppCompatActivity
         System.out.println("User ID: " + userID);
     }
 
-    public void setUpNavigationDrawer(){
+    public void setUpNavigationDrawer() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         setSupportActionBar(toolbar);
@@ -106,7 +108,6 @@ public class MainActivity extends AppCompatActivity
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
     }
-
     public void setUpTabViewPager(){
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
@@ -123,11 +124,9 @@ public class MainActivity extends AppCompatActivity
         pagerAdapter = new PagerAdapter(getSupportFragmentManager(), MainActivity.this);
         viewPager.setAdapter(pagerAdapter);
         viewPager.setOffscreenPageLimit(1);
-
         //setting Tab layout (number of Tabs = number of ViewPager pages)
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-
     }
 
     public void showWelcomeMessage(){
@@ -297,6 +296,36 @@ public class MainActivity extends AppCompatActivity
                 displaySnackbar();
             }
 
+
+        }else if (id == R.id.CampusEvents) {
+            if (hasInternetConnection()) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                WebView wv = new WebView(this);
+                WebSettings webSettings = wv.getSettings();
+                webSettings.setJavaScriptEnabled(true);
+                wv.loadUrl(eventsPage);
+                wv.setWebViewClient(new WebViewClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                        view.loadUrl(url);
+                        return true;
+                    }
+                });
+                alert.setView(wv);
+                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+                alert.show();
+            }else{
+                displaySnackbar();
+            }
+
+
+
+
         } else if (id == R.id.CampusNews) {
             if (hasInternetConnection()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -329,37 +358,38 @@ public class MainActivity extends AppCompatActivity
             Intent i = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + "18316550268"));
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(i);
-        }else if (id == R.id.reportIssue){
-            Snackbar.make(findViewById(android.R.id.content), "Sorry, this feature is broken" , Snackbar.LENGTH_LONG)
-                    .setActionTextColor(Color.BLUE)
-                    .show();
-
-            /*if (hasInternetConnection()) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                alert.setTitle("Report an Issue");
-                WebView wv = new WebView(this);
-                WebSettings webSettings = wv.getSettings();
-                webSettings.setJavaScriptEnabled(true);
-                wv.loadUrl(reportIssue);
-                wv.setWebViewClient(new WebViewClient() {
-                    @Override
-                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                        view.loadUrl(url);
-                        return true;
-                    }
-                });
-                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
-                alert.show();
+        }else if (id == R.id.reportIssue) {
+            if (hasInternetConnection()) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(reportIssue));
+                startActivity(i);
             }
+
+//                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+//                alert.setTitle("Report an Issue");
+//                WebView wv = new WebView(this);
+//                WebSettings webSettings = wv.getSettings();
+//                webSettings.setJavaScriptEnabled(true);
+//                wv.loadUrl(reportIssue);
+//                wv.setWebViewClient(new WebViewClient() {
+//                    @Override
+//                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                        view.loadUrl(url);
+//                        return true;
+//                    }
+//                });
+//                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//                alert.show();
+        //}
             else{
                 displaySnackbar();
             }
-*/
+
         }else if (id == R.id.logout) {
             if (hasInternetConnection()) {
                 final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
