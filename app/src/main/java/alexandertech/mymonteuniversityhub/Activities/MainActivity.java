@@ -32,6 +32,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import java.io.IOException;
@@ -295,8 +296,6 @@ public class MainActivity extends AppCompatActivity
             }else{
                 displaySnackbar();
             }
-
-
         }else if (id == R.id.CampusEvents) {
             if (hasInternetConnection()) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -322,9 +321,6 @@ public class MainActivity extends AppCompatActivity
             }else{
                 displaySnackbar();
             }
-
-
-
 
         } else if (id == R.id.CampusNews) {
             if (hasInternetConnection()) {
@@ -365,27 +361,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(i);
             }
 
-//                AlertDialog.Builder alert = new AlertDialog.Builder(this);
-//                alert.setTitle("Report an Issue");
-//                WebView wv = new WebView(this);
-//                WebSettings webSettings = wv.getSettings();
-//                webSettings.setJavaScriptEnabled(true);
-//                wv.loadUrl(reportIssue);
-//                wv.setWebViewClient(new WebViewClient() {
-//                    @Override
-//                    public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                        view.loadUrl(url);
-//                        return true;
-//                    }
-//                });
-//                alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//                alert.show();
-        //}
             else{
                 displaySnackbar();
             }
@@ -420,10 +395,16 @@ public class MainActivity extends AppCompatActivity
 
         else if (id == R.id.wowMenu) {
             if (hasInternetConnection()) {
-                Uri uri = Uri.parse("https://drive.google.com/viewerng/viewer" +
-                        "?embedded=true&url=www.wowcafe.com/menus/monterey_bay_9.7.16.pdf");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                startActivity(intent);
+                ImageView image = new ImageView(this);
+                image.setImageResource(R.drawable.wowcafe);
+                AlertDialog.Builder builder =  new AlertDialog.Builder(this);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).setView(image);
+                builder.create().show();
             }
             else{
                 displaySnackbar();

@@ -130,7 +130,8 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
                 public void onClick(DialogInterface dialog, int which) {
                     String longitude = String.valueOf(currentParkingLocation.longitude);
                     String latitude = String.valueOf(currentParkingLocation.latitude);
-                    String date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a").format(Calendar.getInstance().getTime());
+                    String date = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss a")
+                            .format(Calendar.getInstance().getTime());
                     prefs.putString("location", latitude + "," + longitude);
                     prefs.putString("date", date);
                     prefs.apply();
@@ -296,49 +297,6 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
         }
         mGoogleMap.setMyLocationEnabled(true);
         mGoogleMap.getUiSettings().setZoomControlsEnabled(true);
-    }
-
-    public void settingsRequest(){
-        LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        LocationSettingsRequest.Builder builder =
-                new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
-        builder.setAlwaysShow(true);
-
-        final PendingResult<LocationSettingsResult> result =
-                LocationServices.SettingsApi.checkLocationSettings(mGoogleApiClient,builder.build());
-        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
-            @Override
-            public void onResult(@NonNull LocationSettingsResult result) {
-                final Status status = result.getStatus();
-                switch (status.getStatusCode()){
-                    case LocationSettingsStatusCodes.SUCCESS:
-                        Log.d("SettingRequest", "inside Success");
-                        getUserLocation();
-                        break;
-                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.d("SettingRequest", "inside resolution required");
-
-                        // Location settings are not satisfied. But could be fixed by showing the user
-                        // a dialog.
-                        try {
-                            Log.d("SettingsRequest", "Inside resolution required- try statement");
-
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
-                            //getUserLocation();
-                        }catch (IntentSender.SendIntentException e){
-                            //ignore this error.
-                        }
-                        break;
-                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        // Location settings are not satisfied. However, we have no way to fix the
-                        // settings so we won't show the dialog.
-                        break;
-                }
-            }
-        });
     }
 
 
