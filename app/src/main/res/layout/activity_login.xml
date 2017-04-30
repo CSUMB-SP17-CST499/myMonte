@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@android:color/holo_red_dark"
-                    android:text="Guest Mode"
+                    android:text="Demo Mode"
                     android:textColor="#ffffff" />
 
             </android.support.design.widget.TextInputLayout>
