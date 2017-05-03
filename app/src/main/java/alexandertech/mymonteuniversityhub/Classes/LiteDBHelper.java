@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -374,6 +376,64 @@ public boolean logout(String SESSION) throws IOException {
         }
 
         return tasksFromServer;
+    }
+
+    public ArrayList<Assignment> getAssignmentsFromServer(String userID) throws IOException {
+        String response ="";
+        URL url = new URL("https://monteapp.me/moodle/monteapi/authn/push/cron/sendAssignmentDatesToCalendar.php?userID=" + userID);
+        HttpURLConnection connection = null;
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("GET");
+        connection.connect();
+        System.out.println(connection.getResponseCode());
+
+        //omg i can't believe we need this ugly-ass code to parse an HTTP response
+        InputStream is = connection.getInputStream();
+        StringBuffer sb = new StringBuffer();
+        String assignments = "";
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String inputLine = "";
+
+        while ((inputLine = br.readLine()) != null) {
+            sb.append(inputLine);
+        }
+
+        assignments = sb.toString(); //ta-da, it's a string now
+        Log.d("Upcoming Assignments: ", assignments);
+
+
+        //Let's parse JSON into a usable arraylist!
+        ArrayList<Assignment> ass = new ArrayList(); //We'll store it here :)
+        String step1 = "";
+        try {
+            String JsonString = assignments;
+            JSONArray initialArray = new JSONArray(JsonString); // - once to get rid of the extra data sent in the HTTP request (200 OK, etc)
+            String name = "";
+            String course = "";
+            String duedate = "";
+
+
+
+            for (int i = 0; i < initialArray.length(); i++) {
+                name = initialArray.getJSONObject(i).getString("name");
+                course = initialArray.getJSONObject(i).getString("shortname");
+                duedate = initialArray.getJSONObject(i).getString("duedate");
+
+                Assignment currentAssignment = new Assignment(name,course,duedate);
+                ass.add(currentAssignment);
+            }
+
+            Log.d("Parsed Assignments: ", step1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        //Return String ArrayList of Assignment Name, Course (ShortName), DueDate
+        return ass;
     }
 }
 

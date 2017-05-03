@@ -41,16 +41,23 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.RunnableFuture;
 
 import alexandertech.mymonteuniversityhub.Adapters.TaskAdapter;
+import alexandertech.mymonteuniversityhub.Classes.Assignment;
 import alexandertech.mymonteuniversityhub.Classes.EventDecorator;
 import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
@@ -66,7 +73,7 @@ import static alexandertech.mymonteuniversityhub.Activities.MainActivity.sharedP
  * Date: 2/17/2017
  * Description: This file instantiates and connects the objects necessary for the PlannerFragment activity, including
  * a Calendar and a TaskList. The calendar will show students at-a-glance info about upcoming events via a custom Dialog.
- * The TaskList will be a dynamic set of Cards filled with user-defined TODO items.
+ * The TaskList will be a dynamic set of Cards filled with user-defined TO-DO items.
  */
 
 public class PlannerFragment extends Fragment {
@@ -90,24 +97,73 @@ public class PlannerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         firebaseInstance = new MyFirebaseInstanceIdService();
+        liteDBHelper = new LiteDBHelper(getContext());
+        ArrayList<Assignment> uglyAssignments = new ArrayList<>();
 
         // XML Layout is inflated for fragment_planner
         v = inflater.inflate(R.layout.fragment_planner, container, false);
         View taskview = inflater.inflate(R.layout.tasklist, container, false);
 
+        //Check server for upcoming Assignments
+        try {
+            uglyAssignments = requestAssignmentsFromServer();
+            Log.d("shit" , uglyAssignments.get(0).getName());
+
+        } catch(Exception e) {
+            Snackbar.make(getView(), "Whoops, I messed up grabbing Assignments :(", Snackbar.LENGTH_LONG).show();
+
+        }
+
+        ArrayList<CalendarDay> dates = new ArrayList<>(); //Assign the getAssignments function to this arraylist
+
+        //TODO: Parse the Assignment Name, Course, and DueDate from the above list
+        for(Assignment a : uglyAssignments)
+        {
+            String pattern = "MM dd YYYY";
+
+            try{
+                Log.d("TEST", a.getDuedate().toString());
+
+
+
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                    dateFormat.setTimeZone(TimeZone.getTimeZone("PDT"));
+                Date date = new Date(Long.parseLong(a.getDuedate().trim()));
+                String converteddate = dateFormat.format(date);
+                Log.d("some date", converteddate);
+
+
+//                Date date = new SimpleDateFormat(pattern, Locale.US).parse(a.getDuedate()); //Step 1: Convert String to Date
+//                Timestamp t = new Timestamp(Long.parseLong(a.getDuedate()));
+//
+//                Calendar c = Calendar.getInstance(Locale.ENGLISH);
+//                c.setTimeInMillis(Long.parseLong(a.getDuedate())); //Step 2: Convert Date to Calendar
+//
+//
+//                CalendarDay currentAssignmentDate = CalendarDay.from(c); //Step 3: Convert Calendar to CalendarDay
+//                dates.add(currentAssignmentDate); //Step 4: Add CalendarDay to list of dates for the Decorator
+//                Log.d("Current: ", currentAssignmentDate.toString());
+            } catch(Exception e) {
+                Log.d("date exception", "whoops");
+            }
+
+        }
+
+
         //Set Up CalendarView
         final MaterialCalendarView calendarView = (MaterialCalendarView) v.findViewById(R.id.calendarView);
-        //debug
-        Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MONTH, -2);
 
-        ArrayList<CalendarDay> dates = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            CalendarDay day = CalendarDay.from(calendar);
-            dates.add(day);
-            calendar.add(Calendar.DATE, 5);
-        }
+        //Calendar calendar = Calendar.getInstance();
+        //calendar.add(Calendar.MONTH, -2);
+
+//        for (int i = 0; i < 30; i++) {
+//            CalendarDay day = CalendarDay.from(calendar);
+//            dates.add(day);
+//            calendar.add(Calendar.DATE, 5);
+//        }
+
         assignmentDot = new EventDecorator(R.color.csumb_blue, dates);
+
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
@@ -163,7 +219,7 @@ public class PlannerFragment extends Fragment {
         recList.setLayoutManager(llm);
 
         /**
-         * TaskList Sync
+         * TaskList Sync - Custom Adapter written to keep tasks in sync with server data
          */
 
         try {
@@ -177,6 +233,7 @@ public class PlannerFragment extends Fragment {
             @Override
             public void onItemClick(View v, int position) {
                 try {
+                    Log.d("VerifyTaskTime", tasks.get(position).getDueDate().toString());
                     launchViewTaskDialog(tasks.get(position));
                 } catch(IOException e) {
 
@@ -412,6 +469,27 @@ public class PlannerFragment extends Fragment {
         });
         thread.start();
         taskAdapter.notifyDataSetChanged();
+
+    }
+
+    public ArrayList<Assignment> requestAssignmentsFromServer() throws Exception {
+        final LiteDBHelper liteDBHelper = new LiteDBHelper(getContext());
+        sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
+        userID = sharedPrefs.getString("ID", "12345");
+        ArrayList<Assignment> assignmentsUgly;
+
+        //RunnableFuture allows arraylist to be populated in a separate thread, and then returned
+        RunnableFuture f = new FutureTask(new Callable() {
+            public ArrayList<Assignment> call() throws IOException{
+                ArrayList<Assignment> t = liteDBHelper.getAssignmentsFromServer(userID);
+                return t;
+            }
+        });
+
+        new Thread(f).start();
+        assignmentsUgly = (ArrayList) f.get();
+
+        return assignmentsUgly;
 
     }
 
