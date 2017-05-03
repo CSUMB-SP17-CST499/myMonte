@@ -41,16 +41,11 @@ import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
@@ -126,11 +121,34 @@ public class PlannerFragment extends Fragment {
 
 
 
-                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    dateFormat.setTimeZone(TimeZone.getTimeZone("PDT"));
-                Date date = new Date(Long.parseLong(a.getDuedate().trim()));
-                String converteddate = dateFormat.format(date);
-                Log.d("some date", converteddate);
+//                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//                    dateFormat.setTimeZone(TimeZone.getTimeZone("PDT"));
+//                Date date = new Date(Long.parseLong(a.getDuedate().trim()));
+//                String converteddate = dateFormat.format(date);
+//                Log.d("some date", converteddate);
+
+                Date date = new Date ();
+                date.setTime((long)Long.parseLong(a.getDuedate())*1000);
+                Log.d("dateish", date.toString());
+//                Long longDate = Long.valueOf(a.getDuedate());
+//
+//                Calendar cal = Calendar.getInstance();
+//                int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
+//                Date da = new Date();
+//                da = new Date(longDate-(long)offset);
+//                cal.setTime(da);
+//
+//                String time =cal.getTime().toLocaleString();
+////this is full string
+//
+//                time = DateFormat.getTimeInstance(DateFormat.MEDIUM).format(da);
+////this is only time
+//
+//                time = DateFormat.getDateInstance(DateFormat.MEDIUM).format(da);
+//                Log.d("time format", time);
+////this is only date
+
+
 
 
 //                Date date = new SimpleDateFormat(pattern, Locale.US).parse(a.getDuedate()); //Step 1: Convert String to Date
