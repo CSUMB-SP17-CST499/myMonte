@@ -84,6 +84,8 @@ public class PlannerFragment extends Fragment {
     private String userLName = "";
     private String userID = "";
     private List<Task> tasks;
+    private ArrayList<Assignment> uglyAssignments;
+
 
     View v;
 
@@ -93,7 +95,7 @@ public class PlannerFragment extends Fragment {
 
         firebaseInstance = new MyFirebaseInstanceIdService();
         liteDBHelper = new LiteDBHelper(getContext());
-        ArrayList<Assignment> uglyAssignments = new ArrayList<>();
+         uglyAssignments = new ArrayList<>();
 
         // XML Layout is inflated for fragment_planner
         v = inflater.inflate(R.layout.fragment_planner, container, false);
@@ -119,67 +121,23 @@ public class PlannerFragment extends Fragment {
             try{
                 Log.d("TEST", a.getDuedate().toString());
 
-
-
-//                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//                    dateFormat.setTimeZone(TimeZone.getTimeZone("PDT"));
-//                Date date = new Date(Long.parseLong(a.getDuedate().trim()));
-//                String converteddate = dateFormat.format(date);
-//                Log.d("some date", converteddate);
-
                 Date date = new Date ();
                 date.setTime((long)Long.parseLong(a.getDuedate())*1000);
                 Log.d("dateish", date.toString());
-//                Long longDate = Long.valueOf(a.getDuedate());
-//
-//                Calendar cal = Calendar.getInstance();
-//                int offset = cal.getTimeZone().getOffset(cal.getTimeInMillis());
-//                Date da = new Date();
-//                da = new Date(longDate-(long)offset);
-//                cal.setTime(da);
-//
-//                String time =cal.getTime().toLocaleString();
-////this is full string
-//
-//                time = DateFormat.getTimeInstance(DateFormat.MEDIUM).format(da);
-////this is only time
-//
-//                time = DateFormat.getDateInstance(DateFormat.MEDIUM).format(da);
-//                Log.d("time format", time);
-////this is only date
 
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                CalendarDay calendarDay = CalendarDay.from(cal);
+                dates.add(calendarDay);
 
-
-
-//                Date date = new SimpleDateFormat(pattern, Locale.US).parse(a.getDuedate()); //Step 1: Convert String to Date
-//                Timestamp t = new Timestamp(Long.parseLong(a.getDuedate()));
-//
-//                Calendar c = Calendar.getInstance(Locale.ENGLISH);
-//                c.setTimeInMillis(Long.parseLong(a.getDuedate())); //Step 2: Convert Date to Calendar
-//
-//
-//                CalendarDay currentAssignmentDate = CalendarDay.from(c); //Step 3: Convert Calendar to CalendarDay
-//                dates.add(currentAssignmentDate); //Step 4: Add CalendarDay to list of dates for the Decorator
-//                Log.d("Current: ", currentAssignmentDate.toString());
             } catch(Exception e) {
                 Log.d("date exception", "whoops");
             }
 
         }
 
-
         //Set Up CalendarView
         final MaterialCalendarView calendarView = (MaterialCalendarView) v.findViewById(R.id.calendarView);
-
-        //Calendar calendar = Calendar.getInstance();
-        //calendar.add(Calendar.MONTH, -2);
-
-//        for (int i = 0; i < 30; i++) {
-//            CalendarDay day = CalendarDay.from(calendar);
-//            dates.add(day);
-//            calendar.add(Calendar.DATE, 5);
-//        }
-
         assignmentDot = new EventDecorator(R.color.csumb_blue, dates);
 
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
@@ -187,9 +145,40 @@ public class PlannerFragment extends Fragment {
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
                 AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                 alert.setTitle(""+date);
+
                 ListView modeList = new ListView(getContext());
-                String[] stringArray = new String[] { "Assignment 1", "Assignment 2" };
-                ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, stringArray);
+                String[] stringArray = new String[50];
+                ArrayList<String> stringArrayList = new ArrayList<String>();
+
+
+                //TODO: Ask the MonteApi to return the relevant assignments for the selected date
+                //int i  =0;
+
+                for(Assignment a : uglyAssignments)
+                {
+                    if(a.getDuedate() != "null")
+                    {
+                        Date d = new Date ();
+                        Log.d("saaaaaa", a.getDuedate());
+                        d.setTime(Long.parseLong(a.getDuedate())*1000);
+
+                        Calendar cal = Calendar.getInstance();
+                        cal.setTime(d);
+                        CalendarDay calendarDay = CalendarDay.from(cal);
+
+
+                        if(calendarDay.equals(date)) //If date tapped is a date with assignments due
+                        {
+                            stringArrayList.add((a.getName() + " " + a.getCourse()));
+                            Log.d("StringArray: ", stringArrayList.get(0));
+                        }
+
+                    }
+
+                }
+
+                ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, stringArrayList);
+
                 modeList.setAdapter(modeAdapter);
                 alert.setView(modeList);
                 alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
@@ -199,7 +188,7 @@ public class PlannerFragment extends Fragment {
                     }
                 });
                 alert.show();
-                //TODO: Ask the MonteApi to return the relevant assignments for the selected date
+
             }
         });
 
