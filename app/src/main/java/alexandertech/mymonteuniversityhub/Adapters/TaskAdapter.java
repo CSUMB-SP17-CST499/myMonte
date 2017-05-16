@@ -72,7 +72,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(v, mViewHolder.getPosition()); //TODO: Get position is deprecated may be causing the bug.
+                listener.onItemClick(v, mViewHolder.getAdapterPosition()); //TODO: Get position is deprecated may be causing the bug.
             }
         });
 
