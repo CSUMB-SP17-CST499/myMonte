@@ -32,7 +32,6 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.CalendarMode;
@@ -54,7 +53,7 @@ import java.util.concurrent.RunnableFuture;
 import alexandertech.mymonteuniversityhub.Adapters.TaskAdapter;
 import alexandertech.mymonteuniversityhub.Classes.Assignment;
 import alexandertech.mymonteuniversityhub.Classes.EventDecorator;
-import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MonteApiHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.Classes.Task;
 import alexandertech.mymonteuniversityhub.Interfaces.TaskItemClickListener;
@@ -73,16 +72,18 @@ import static alexandertech.mymonteuniversityhub.Activities.MainActivity.sharedP
 
 public class PlannerFragment extends Fragment {
 
-    private TaskAdapter taskAdapter;
-    private CardView mCardView;
-    private EventDecorator assignmentDot;
+    private TaskAdapter taskAdapter; //Custom adapter to preserve data integrity between server db & TaskList recyclerview
+    private CardView mCardView; //GoogleNow-style Cards for the Task List
+    private EventDecorator assignmentDot; //Allows indicator dots to be added to the calendar
+
+    private MyFirebaseInstanceIdService firebaseInstance; //Firebase connection
     private SharedPreferences sharedPreferences;
-    private MyFirebaseInstanceIdService firebaseInstance;
-    private LiteDBHelper liteDBHelper;
+    private MonteApiHelper monteApiHelper;
     private String userEmail = "";
     private String userFName = "";
     private String userLName = "";
     private String userID = "";
+
     private List<Task> tasks;
     private ArrayList<Assignment> uglyAssignments;
 
@@ -93,36 +94,52 @@ public class PlannerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        firebaseInstance = new MyFirebaseInstanceIdService();
-        liteDBHelper = new LiteDBHelper(getContext());
-         uglyAssignments = new ArrayList<>();
+        /**
+         * First, we must:
+         *      1. Connect to Firebase Instance for Notifications (Assignment Reminders)
+         *      2. Connect to the MonteAPI (monteApiHelper)
+         *      3. Inflate the views (UI elements)
+         *      4. Prepare the ugly data for manipulation & display
+         */
 
+        // Step 1 \\
+        //Database Connection Setup
+        firebaseInstance = new MyFirebaseInstanceIdService();
+        monteApiHelper = new MonteApiHelper(getContext());
+
+        // Step 2 \\
+        //Instantiate the list of Assignments retrieved from the server (still needs to be parsed)
+        uglyAssignments = new ArrayList<>();
+
+        // Step 3 \\
         // XML Layout is inflated for fragment_planner
-        v = inflater.inflate(R.layout.fragment_planner, container, false);
+        v = inflater.inflate(R.layout.fragment_planner, container, false); //Position of this line is important, be careful!
         View taskview = inflater.inflate(R.layout.tasklist, container, false);
 
+
+        // Step 4 \\
         //Check server for upcoming Assignments
         try {
             uglyAssignments = requestAssignmentsFromServer();
-            Log.d("shit" , uglyAssignments.get(0).getName());
+            Log.d("Raw Assignment Data" , "All Data" + uglyAssignments.get(0).getName());
 
         } catch(Exception e) {
             Snackbar.make(getView(), "Whoops, I messed up grabbing Assignments :(", Snackbar.LENGTH_LONG).show();
-
         }
 
-        ArrayList<CalendarDay> dates = new ArrayList<>(); //Assign the getAssignments function to this arraylist
+        //Assign the getAssignments function to a list of CalendarDay objects
+        ArrayList<CalendarDay> dates = new ArrayList<>(); //CalendarDay is a special date wrapper from MaterialCalendarView library
 
-        //TODO: Parse the Assignment Name, Course, and DueDate from the above list
+        //Parse the Assignment Name, Course, and DueDate from the above list
         for(Assignment a : uglyAssignments)
         {
-            String pattern = "MM dd YYYY";
+            String pattern = "MM dd YYYY"; //We like this date format, you can use any :)
 
             try{
-                Log.d("TEST", a.getDuedate().toString());
+                Log.d("Raw Assignment Data", "Due Date: " + a.getDuedate().toString());
 
                 Date date = new Date ();
-                date.setTime((long)Long.parseLong(a.getDuedate())*1000);
+                date.setTime((long)Long.parseLong(a.getDuedate())*1000); //Multiplication by 1000 is REQUIRED to convert to UNIX time (millis)
                 Log.d("dateish", date.toString());
 
                 Calendar cal = Calendar.getInstance();
@@ -131,54 +148,67 @@ public class PlannerFragment extends Fragment {
                 dates.add(calendarDay);
 
             } catch(Exception e) {
-                Log.d("date exception", "whoops");
+                Log.d("Raw Assignment Data", "Error parsing assignment data");
             }
 
         }
 
-        //Set Up CalendarView
+        /**
+         * MaterialCalendarView - https://github.com/prolificinteractive/material-calendarview
+         *      Assignments are represented in the calendar with the assignmentDot decorator.
+         *      When a user taps a date, the corresponding assignments appear in an AlertDialog.
+         */
+
+
+        //Instantiate the Calendar
         final MaterialCalendarView calendarView = (MaterialCalendarView) v.findViewById(R.id.calendarView);
+
+        //Instantiate the Dot Decorator
         assignmentDot = new EventDecorator(R.color.csumb_blue, dates);
 
+        //Attach a listener to detect when a user taps a specific date
         calendarView.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(@NonNull MaterialCalendarView widget, @NonNull CalendarDay date, boolean selected) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-                alert.setTitle(""+date);
 
+                //An alert dialog will be shown -
+                AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+
+                // - to display the assignments in a listview!
                 ListView modeList = new ListView(getContext());
-                String[] stringArray = new String[50];
                 ArrayList<String> stringArrayList = new ArrayList<String>();
 
-
-                //TODO: Ask the MonteApi to return the relevant assignments for the selected date
-                //int i  =0;
-
+                //Iterate through the Assignments and find the ones matching the selected date
                 for(Assignment a : uglyAssignments)
                 {
                     if(a.getDuedate() != "null")
                     {
+
                         Date d = new Date ();
-                        Log.d("saaaaaa", a.getDuedate());
                         d.setTime(Long.parseLong(a.getDuedate())*1000);
 
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(d);
                         CalendarDay calendarDay = CalendarDay.from(cal);
 
-
-                        if(calendarDay.equals(date)) //If date tapped is a date with assignments due
+                        //If date tapped = date with assignments due, show info
+                        if(calendarDay.equals(date))
                         {
-                            stringArrayList.add((a.getName() + " " + a.getCourse()));
-                            Log.d("StringArray: ", stringArrayList.get(0));
+                            alert.setTitle("Hey, Don't Forget!");
+                            stringArrayList.add((a.getCourse() + ": " + a.getName()));
+                        }
+
+                        else
+                        {
+                            alert.setTitle("Nothing due :)");
                         }
 
                     }
 
                 }
 
+                //Setup simple listview adapter
                 ArrayAdapter<String> modeAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_list_item_1, android.R.id.text1, stringArrayList);
-
                 modeList.setAdapter(modeAdapter);
                 alert.setView(modeList);
                 alert.setNegativeButton("Close", new DialogInterface.OnClickListener() {
@@ -218,9 +248,11 @@ public class PlannerFragment extends Fragment {
          * see https://developer.android.com/guide/components/fragments.html#Creating
          */
 
-        RecyclerView recList = (RecyclerView) v.findViewById(R.id.cardList); // Connect RecyclerView (cardList) and set its layout manager
-        recList.setHasFixedSize(true);
+        // Connect RecyclerView (cardList) and set its layout manager
+        RecyclerView recList = (RecyclerView) v.findViewById(R.id.cardList);
+        recList.setHasFixedSize(true); //boost memory-management efficiency by ensuring the list is not redrawn if height doesn't change when an element is added
 
+        //A LayoutManager ensures the RecyclerView behaves like a listview
         LinearLayoutManager llm = new LinearLayoutManager(getContext());
         llm.setOrientation(LinearLayoutManager.VERTICAL);
         recList.setLayoutManager(llm);
@@ -230,25 +262,31 @@ public class PlannerFragment extends Fragment {
          */
 
         try {
-            tasks = requestTasksFromServer(); //Initialize TaskList with tasks from server
+            //Initialize TaskList with tasks from server
+            tasks = requestTasksFromServer();
         } catch (Exception e) {
-            tasks = new ArrayList<>(); //Make a brand new empty list if not found on server
-            Log.d("TasksFromServer", "request failed...PlannerFrag:158");
+            //Make a brand new empty list if not found on server
+            tasks = new ArrayList<>();
+            Log.d("TasksFromServer", "request failed...");
         }
 
         taskAdapter = new TaskAdapter(getContext(), tasks, new TaskItemClickListener() {
             @Override
             public void onItemClick(View v, int position) {
                 try {
-                    Log.d("VerifyTaskTime", tasks.get(position).getDueDate().toString());
-                    launchViewTaskDialog(tasks.get(position));
-                } catch(IOException e) {
 
+                    //Show the task that a user tapped
+                    launchViewTaskDialog(tasks.get(position)); //TODO: fix the tasklist duedate display bug - indexOf? (position is wrong)
+                    Log.d("VerifyTaskTime", tasks.get(position).getDueDate().toString());
+
+                } catch(IOException e) {
+                    Snackbar.make(v, "Error finding info for task \"" + tasks.get(position).getName() + "\"", Snackbar.LENGTH_SHORT).show();
                 }
             }
         }); //Connect ArrayList to the Adapter
         recList.setAdapter(taskAdapter); //Connect RecyclerView to the Adapter
         //So, it goes RecyclerView -> Adapter <- TaskArrayList :)
+
 
         //This helps the BottomSheetDialog handle keyboard input without hiding the Date & Time Buttons
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
@@ -268,7 +306,6 @@ public class PlannerFragment extends Fragment {
         addTaskDialog.show();
 
         final Calendar todayDate = Calendar.getInstance();
-        Toast.makeText(getContext(), todayDate.toString(), Toast.LENGTH_LONG);
         final Calendar selectedDate = Calendar.getInstance(); //Initialize to today's date
 
         final Button btnSave = (Button) addTaskLayout.findViewById(R.id.btnSaveTask);
@@ -300,6 +337,7 @@ public class PlannerFragment extends Fragment {
         //End Handle Disable Empty Task Uploads
 
 
+        //Tapping the Due Date launches a DatePickerDialog
         btnDueDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -320,6 +358,7 @@ public class PlannerFragment extends Fragment {
             }
         });
 
+        //Tapping the clock icon launches a TimePickerDialog
         btnDueTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -339,15 +378,17 @@ public class PlannerFragment extends Fragment {
         });
 
 
+        //Tapping the Save button stores all user input on the server
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                liteDBHelper = new LiteDBHelper(getContext());
+                monteApiHelper = new MonteApiHelper(getContext());
                 sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
                 userFName = sharedPrefs.getString("First Name", "Monte"); //SharedPreferences retrieval takes Key and DefaultValue as parameters
                 userLName = sharedPrefs.getString("Last Name", "Otter");
                 userEmail = sharedPrefs.getString("Email", "monte@ottermail.com");
                 userID = sharedPrefs.getString("ID", "12345");
+
                 final String taskTitle = taskEditText.getText().toString();
                 final String selectedDateString = Long.toString((selectedDate.getTime().getTime() / 1000)); //gotta convert from cal to date to Unixtime
                 SimpleDateFormat prettyDueDate = new SimpleDateFormat("MMM d, h:mm a");
@@ -355,8 +396,8 @@ public class PlannerFragment extends Fragment {
                 RunnableFuture f = new FutureTask(new Callable() {
                     public Integer call() {
                         try {
-                            Log.d("potato:", selectedDateString);
-                            int taskID = liteDBHelper.insertTask(taskTitle, userID, selectedDateString, firebaseInstance.getFirebaseAndroidID());
+                            //Tasks created on the device do not get an ID until they are inserted into the server-side database
+                            int taskID = monteApiHelper.insertTask(taskTitle, userID, selectedDateString, firebaseInstance.getFirebaseAndroidID());
                             Log.d("Timestamp Accuracy", selectedDateString);
                             return taskID;
                         } catch (MalformedURLException e) {
@@ -379,8 +420,11 @@ public class PlannerFragment extends Fragment {
                     Log.d("TaskIntConversionError", "oops int");
                 }
 
+                //Now that the task has been given an ID by the server, we can add it to our adapter
                 Task t = new Task(taskTitle, selectedDate, taskID);
                 tasks.add(t);
+
+                //Upon notifying the adapter of a data change, the RecyclerView will be populated with our new Task :)
                 taskAdapter.notifyDataSetChanged();
                 addTaskDialog.closeOptionsMenu();
                 addTaskDialog.dismiss();
@@ -437,15 +481,15 @@ public class PlannerFragment extends Fragment {
     }
 
     public ArrayList<Task> requestTasksFromServer() throws IOException,ExecutionException,InterruptedException {
-        final LiteDBHelper liteDBHelper = new LiteDBHelper(getContext());
+        final MonteApiHelper monteApiHelper = new MonteApiHelper(getContext());
         sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
         userID = sharedPrefs.getString("ID", "12345");
         ArrayList<Task> result;
 
-        //RunnableFuture allows arraylist to be populated in a separate thread, and then returned
+        //RunnableFuture allows arraylist to be populated in a separate thread, and then returned to the original thread
         RunnableFuture f = new FutureTask(new Callable() {
             public ArrayList<Task> call() throws IOException{
-                ArrayList<Task> t = liteDBHelper.getTasksFromServer(userID);
+                ArrayList<Task> t = monteApiHelper.getTasksFromServer(userID);
                 return t;
             }
         });
@@ -460,11 +504,11 @@ public class PlannerFragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    final LiteDBHelper liteDBHelper = new LiteDBHelper(getContext());
+                    final MonteApiHelper monteApiHelper = new MonteApiHelper(getContext());
                     sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
                     userID = sharedPrefs.getString("ID", "12345");
                     Log.d("Object task id", Integer.toString(t.getId()));
-                    liteDBHelper.deleteTask(userID, t.getId());
+                    monteApiHelper.deleteTask(userID, t.getId());
                     return;
 
                 } catch (MalformedURLException e) {
@@ -480,7 +524,7 @@ public class PlannerFragment extends Fragment {
     }
 
     public ArrayList<Assignment> requestAssignmentsFromServer() throws Exception {
-        final LiteDBHelper liteDBHelper = new LiteDBHelper(getContext());
+        final MonteApiHelper monteApiHelper = new MonteApiHelper(getContext());
         sharedPreferences = getActivity().getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
         userID = sharedPrefs.getString("ID", "12345");
         ArrayList<Assignment> assignmentsUgly;
@@ -488,7 +532,7 @@ public class PlannerFragment extends Fragment {
         //RunnableFuture allows arraylist to be populated in a separate thread, and then returned
         RunnableFuture f = new FutureTask(new Callable() {
             public ArrayList<Assignment> call() throws IOException{
-                ArrayList<Assignment> t = liteDBHelper.getAssignmentsFromServer(userID);
+                ArrayList<Assignment> t = monteApiHelper.getAssignmentsFromServer(userID);
                 return t;
             }
         });

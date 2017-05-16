@@ -45,7 +45,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     }
 
-
     // These 3 methods must be overridden for the recycling cards to be populated and counted.
 
     @Override
@@ -55,18 +54,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @Override
     public void onBindViewHolder(final TaskViewHolder taskViewHolder, int position) {
+        //Binds a task to a specific view (in this case, a GoogleNow-style card)
         Task t = taskList.get(position);
         System.out.println(taskViewHolder);
         taskViewHolder.taskName.setText(t.getName());
         taskViewHolder.id = t.getId();
-
-//        taskViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Snackbar.make(v, taskViewHolder.taskName.getText() + " " + taskViewHolder.id, Snackbar.LENGTH_LONG).show();
-//            }
-//        });
-
         return;
     }
 
@@ -80,7 +72,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.onItemClick(v, mViewHolder.getPosition());
+                listener.onItemClick(v, mViewHolder.getPosition()); //TODO: Get position is deprecated may be causing the bug.
             }
         });
 
@@ -104,13 +96,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         public TaskViewHolder(View view){
             super(view);
 
-            //Set the OnClick action for each element in a card.
             cardView = (CardView) view.findViewById(R.id.taskCard);
-//            cardView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                }
-//            });
             taskName = (TextView) view.findViewById(R.id.txtTaskName);
         }
 

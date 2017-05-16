@@ -39,9 +39,9 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.HashMap;
 
-import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MonteApiHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
-import alexandertech.mymonteuniversityhub.Fragments.MapsFragment;
+import alexandertech.mymonteuniversityhub.Fragments.ParkingFragment;
 import alexandertech.mymonteuniversityhub.Fragments.PlannerFragment;
 import alexandertech.mymonteuniversityhub.Fragments.StudyRoomsFragment;
 import alexandertech.mymonteuniversityhub.R;
@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                 case 1:
                         return new StudyRoomsFragment();
                 case 2:
-                    return new MapsFragment();
+                    return new ParkingFragment();
             }
             return null;
         }
@@ -367,7 +367,7 @@ public class MainActivity extends AppCompatActivity
 
         }else if (id == R.id.logout) {
             if (hasInternetConnection()) {
-                final LiteDBHelper dbFlush = new LiteDBHelper(getApplicationContext());
+                final MonteApiHelper dbFlush = new MonteApiHelper(getApplicationContext());
                 final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
                 final Thread thread = new Thread(new Runnable() {
                     @Override

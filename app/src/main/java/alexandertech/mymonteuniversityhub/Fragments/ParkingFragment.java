@@ -57,7 +57,7 @@ import static alexandertech.mymonteuniversityhub.Activities.MainActivity.prefs;
 import static alexandertech.mymonteuniversityhub.Activities.MainActivity.sharedPrefs;
 
 
-public class MapsFragment extends Fragment implements PermissionCallback, ErrorCallback,
+public class ParkingFragment extends Fragment implements PermissionCallback, ErrorCallback,
         OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener{
 
@@ -263,7 +263,7 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
     //Call back method for when map is ready to be used.
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Log.d("MapsFragment", "Inside onMapReady");
+        Log.d("ParkingFragment", "Inside onMapReady");
         mGoogleMap = googleMap;
         mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
         LatLng csumb = new LatLng(36.653758, -121.798056);
@@ -302,7 +302,7 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
 
     @Override
     public void onResume() {
-        Log.d("MapsFragment", "Inside onResume");
+        Log.d("ParkingFragment", "Inside onResume");
 
         super.onResume();
         if (mMapView != null) {
@@ -312,7 +312,7 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
 
     @Override
     public void onDestroy() {
-        Log.d("MapsFragment", "Inside onDestroy");
+        Log.d("ParkingFragment", "Inside onDestroy");
         super.onDestroy();
         if (mMapView != null)
             mMapView.onDestroy();
@@ -320,14 +320,14 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
 
     @Override
     public void onStart() {
-        Log.d("MapsFragment", "Inside onStart");
+        Log.d("ParkingFragment", "Inside onStart");
         super.onStart();
         mGoogleApiClient.connect();
     }
 
     @Override
     public void onStop() {
-        Log.d("MapsFragment", "Inside onStop");
+        Log.d("ParkingFragment", "Inside onStop");
 
         super.onStop();
         if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
@@ -344,7 +344,7 @@ public class MapsFragment extends Fragment implements PermissionCallback, ErrorC
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d("MapsFragment", "Inside onConnected");
+        Log.d("ParkingFragment", "Inside onConnected");
     }
 
     @Override

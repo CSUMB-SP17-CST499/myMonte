@@ -11,7 +11,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
-import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MonteApiHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.R;
 
@@ -29,9 +29,10 @@ public class SplashScreen extends AppCompatActivity {
             super.onPreExecute();
             // before making db calls
         }
+
         @Override
         protected Boolean doInBackground(Void... arg0) {
-            final LiteDBHelper status = new LiteDBHelper(getApplicationContext());
+            final MonteApiHelper status = new MonteApiHelper(getApplicationContext());
             //final boolean isLoggedInFromLite = status.getUserLoginStatus();
             final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();
             boolean isLoggedInFromRemote = false;
@@ -58,7 +59,7 @@ public class SplashScreen extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(final Boolean isSessionValid) {
-            LiteDBHelper status = new LiteDBHelper(getApplicationContext());
+            MonteApiHelper status = new MonteApiHelper(getApplicationContext());
             //here the session from the database is still valid... therefore we proceed with auto login
             if (isSessionValid) {
                 Intent MainActivity = new Intent(SplashScreen.this, MainActivity.class);
@@ -77,7 +78,7 @@ public class SplashScreen extends AppCompatActivity {
          * Method to place all userdata into the SharedPreferences (must do this here in Splash to ensure SharedPrefs up-to-date
          * @param status
          */
-        private void putUserDataIntoSharedPreferences(LiteDBHelper status) {
+        private void putUserDataIntoSharedPreferences(MonteApiHelper status) {
             SharedPreferences sharedPreferences = getSharedPreferences("MontePrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor prefEditor = sharedPreferences.edit();
             prefEditor.putString("First Name", status.getFName());

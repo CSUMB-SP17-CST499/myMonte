@@ -48,7 +48,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import alexandertech.mymonteuniversityhub.Classes.LiteDBHelper;
+import alexandertech.mymonteuniversityhub.Classes.MonteApiHelper;
 import alexandertech.mymonteuniversityhub.Classes.MyFirebaseInstanceIdService;
 import alexandertech.mymonteuniversityhub.R;
 
@@ -499,7 +499,7 @@ public String  lastName ="";
                 startActivity(mainActivity);
 
 
-                final LiteDBHelper StoreUser = new LiteDBHelper(getApplicationContext());
+                final MonteApiHelper StoreUser = new MonteApiHelper(getApplicationContext());
                 StoreUser.storeAccount(firstName, lastName, emailAdd, sessionKey, userID);
 
                 final MyFirebaseInstanceIdService firebaseID = new MyFirebaseInstanceIdService();

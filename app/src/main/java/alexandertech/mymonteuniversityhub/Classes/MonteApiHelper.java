@@ -36,7 +36,7 @@ import static java.security.AccessController.getContext;
 /**
  * Created by JAlexander on 3/30/2017.
  */
-public class LiteDBHelper extends SQLiteOpenHelper {
+public class MonteApiHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "alexandertech.mymonteuniversityhub.session.db";
     private SQLiteDatabase db;
@@ -50,7 +50,7 @@ public class LiteDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_GPSCOORDINATES = "gpsCoordinates";
 
 
-    public LiteDBHelper(Context context) {
+    public MonteApiHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         databasePath = context.getDatabasePath(DATABASE_NAME).toString();
         this.context2 = context;
@@ -355,8 +355,6 @@ public boolean logout(String SESSION) throws IOException {
                 step1 = initialArray.getJSONObject(i).getString("Tasks");
                 String step2 =  step1; //had [ ] here before
                 finalArray = new JSONArray(step2);
-
-                //Log.d("haha", finalArray.getJSONObject(0).getString("task_title"), new Exception());
 
                 for (int j = 0; j <finalArray.length();  j++)
                 {
