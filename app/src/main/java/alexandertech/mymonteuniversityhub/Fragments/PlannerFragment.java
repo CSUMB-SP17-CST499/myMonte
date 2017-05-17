@@ -177,6 +177,7 @@ public class PlannerFragment extends Fragment {
                 // - to display the assignments in a listview!
                 ListView modeList = new ListView(getContext());
                 ArrayList<String> stringArrayList = new ArrayList<String>();
+                alert.setTitle("Nothing due :)"); //Initialize w/ no assignments
 
                 //Iterate through the Assignments and find the ones matching the selected date
                 for(Assignment a : uglyAssignments)
@@ -196,11 +197,6 @@ public class PlannerFragment extends Fragment {
                         {
                             alert.setTitle("Hey, Don't Forget!");
                             stringArrayList.add((a.getCourse() + ": " + a.getName()));
-                        }
-
-                        else
-                        {
-                            alert.setTitle("Nothing due :)");
                         }
 
                     }

@@ -99,8 +99,9 @@ public class ParkingFragment extends Fragment implements PermissionCallback, Err
             String[] locationArray = sharedPrefs.getString("location", "").split(",");
             Double retrievedLat = Double.parseDouble(locationArray[0]);
             Double retrievedLong = Double.parseDouble(locationArray[1]);
-            Toast.makeText(getActivity(), retrievedLat + " and "
-                    + retrievedLong, Toast.LENGTH_SHORT).show();
+//
+//            Toast.makeText(getActivity(), retrievedLat + " and "
+//                    + retrievedLong, Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                    Uri.parse("http://maps.google.com/maps?daddr=" + retrievedLat.toString() + "," +
@@ -159,8 +160,9 @@ public class ParkingFragment extends Fragment implements PermissionCallback, Err
             String[] locationArray = sharedPrefs.getString("location", "").split(",");
             Double retrievedLat = Double.parseDouble(locationArray[0]);
             Double retrievedLong = Double.parseDouble(locationArray[1]);
-            Toast.makeText(getActivity(), retrievedLat + " and "
-                    + retrievedLong, Toast.LENGTH_SHORT).show();
+
+//            Toast.makeText(getActivity(), retrievedLat + " and "
+//                    + retrievedLong, Toast.LENGTH_SHORT).show();
 
             String date = sharedPrefs.getString("date","");
             LatLng latlng = new LatLng(retrievedLat, retrievedLong);
